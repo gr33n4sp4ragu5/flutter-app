@@ -26,11 +26,13 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final formKey = new GlobalKey<FormState>();
 
-  String _email, _password, _confirmPassword, _name, _surnames;
+  String _email, _password, _name, _surnames;
   DateTime _birthdate;
   Gender _gender;
   int _genderSelectedValue = 0;
   DateTime selectedDate;
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
 
   @override
   initState() {
@@ -52,6 +54,7 @@ class _RegisterState extends State<Register> {
     final passwordField = TextFormField(
       autofocus: false,
       obscureText: true,
+      controller: _pass,
       validator: (value) => value.isEmpty ? PLEASE_ENTER_PASSWORD : null,
       onSaved: (value) => _password = value,
       decoration: buildInputDecoration(ENTER_PASSWORD, Icons.lock),
@@ -59,8 +62,14 @@ class _RegisterState extends State<Register> {
 
     final confirmPassword = TextFormField(
       autofocus: false,
-      validator: (value) => value.isEmpty ? PLEASE_ENTER_PASSWORD : null,
-      onSaved: (value) => _confirmPassword = value,
+      controller: _confirmPass,
+      validator: (value) {
+        if(value.isEmpty)
+          return PLEASE_ENTER_PASSWORD;
+        if(value != _pass.text)
+          return 'Las contraseñas deben ser iguales';
+        return null;
+    },
       obscureText: true,
       decoration: buildInputDecoration(CONFIRM_PASSWORD, Icons.lock),
     );
@@ -151,7 +160,7 @@ class _RegisterState extends State<Register> {
       final form = formKey.currentState;
       if (form.validate() && _genderSelectedValue > 0) {
         form.save();
-        auth.register(_email, _password, _confirmPassword, _name, _surnames, _birthdate, _gender).then((response) {
+        auth.register(_email, _password, _name, _surnames, _birthdate, _gender).then((response) {
           if (response['status']) {
             Navigator.pushReplacementNamed(context, '/login');
           } else {
