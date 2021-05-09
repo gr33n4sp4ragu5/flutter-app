@@ -27,6 +27,8 @@ dependencies:
    ^0.12.2
   shared_preferences:
     ^0.5.12+4
+  flushbar:
+    ^1.10.4
   flutter:
     sdk: flutter
 
