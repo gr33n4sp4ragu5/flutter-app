@@ -49,7 +49,7 @@ class _LoginState extends State<Login> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         TextButton(
-          child: Text("Sign up", style: TextStyle(fontWeight: FontWeight.w300)),
+          child: Text("Registrarse", style: TextStyle(fontWeight: FontWeight.w300)),
           onPressed: () {
             Navigator.pushReplacementNamed(context, '/register');
           },
@@ -70,11 +70,11 @@ class _LoginState extends State<Login> {
           if (response['status']) {
             User user = response['user'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/dashboard');
+            Navigator.pushReplacementNamed(context, '/survey');
           } else {
             Flushbar(
-              title: "Failed Login",
-              message: response['detail'].toString(),
+              title: "Login fallido",
+              message: "Email o contraseña no válidos",
               duration: Duration(seconds: 3),
             ).show(context);
           }

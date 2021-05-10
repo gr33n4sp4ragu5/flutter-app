@@ -43,10 +43,11 @@ class MyApp extends StatelessWidget {
                       return Login();
                     else
                       UserPreferences().removeUser();
-                    return Survey(user: snapshot.data);
+                    return Survey();
                 }
               }),
           routes: {
+            '/survey': (context) => Survey(),
             '/login': (context) => Login(),
             '/register': (context) => Register(),
           }),
