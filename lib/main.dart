@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:collective_intelligence_metre/pages/dashboard.dart';
+import 'package:collective_intelligence_metre/pages/survey.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
 import 'package:collective_intelligence_metre/pages/register.dart';
-import 'package:collective_intelligence_metre/pages/welcome.dart';
 import 'package:collective_intelligence_metre/providers/auth.dart';
 import 'package:collective_intelligence_metre/providers/user_provider.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'Collective Intelligence Metre',
           theme: ThemeData(
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -44,11 +43,10 @@ class MyApp extends StatelessWidget {
                       return Login();
                     else
                       UserPreferences().removeUser();
-                    return Welcome(user: snapshot.data);
+                    return Survey(user: snapshot.data);
                 }
               }),
           routes: {
-            '/dashboard': (context) => DashBoard(),
             '/login': (context) => Login(),
             '/register': (context) => Register(),
           }),
