@@ -21,6 +21,14 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  provider:
+    ^4.3.3
+  http:
+   ^0.12.2
+  shared_preferences:
+    ^0.5.12+4
+  another_flushbar:
+    ^1.10.11
   flutter:
     sdk: flutter
 
