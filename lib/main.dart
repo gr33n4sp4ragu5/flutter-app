@@ -8,6 +8,7 @@ import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:provider/provider.dart';
 
 import 'domain/user.dart';
+import 'linear_survey_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
                 }
               }),
           routes: {
-            '/survey': (context) => Survey(),
+            '/survey': (context) => LinearSurveyPage(),
             '/login': (context) => Login(),
             '/register': (context) => Register(),
           }),
