@@ -44,13 +44,14 @@ class MyApp extends StatelessWidget {
                       return Login();
                     else
                       UserPreferences().removeUser();
-                    return Survey();
+                    return Home();
                 }
               }),
           routes: {
             '/survey': (context) => LinearSurveyPage(),
             '/login': (context) => Login(),
             '/register': (context) => Register(),
+            '/home': (context) => Home(),
           }),
     );
   }
