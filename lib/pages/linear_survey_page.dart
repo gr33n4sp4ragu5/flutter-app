@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:research_package/research_package.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
-import 'research_package_objects/linear_survey_objects.dart';
+import '../research_package_objects/linear_survey_objects.dart';
 import 'dart:convert';
 
 class LinearSurveyPage extends StatelessWidget {
@@ -13,8 +13,7 @@ class LinearSurveyPage extends StatelessWidget {
 
   void resultCallback(RPTaskResult result) {
     // Do anything with the result
-    String formattedResult = _encode(result);
-    send_survey(formattedResult);
+    send_survey(result);
     print(_encode(result));
   }
 
@@ -23,7 +22,7 @@ class LinearSurveyPage extends StatelessWidget {
     print("The result so far:\n" + _encode(result));
   }
 
-  Future<Map<String, dynamic>> send_survey(String formatted_result) async {
+  Future<Map<String, dynamic>> send_survey(RPTaskResult formatted_result) async {
 
     final Map<String, dynamic> survey_data = {
       'survey': formatted_result

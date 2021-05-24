@@ -8,7 +8,7 @@ import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:provider/provider.dart';
 
 import 'domain/user.dart';
-import 'linear_survey_page.dart';
+import 'pages/linear_survey_page.dart';
 
 void main() {
   runApp(MyApp());

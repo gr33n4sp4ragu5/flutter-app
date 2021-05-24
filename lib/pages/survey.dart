@@ -1,4 +1,4 @@
-import 'package:collective_intelligence_metre/linear_survey_page.dart';
+import 'package:collective_intelligence_metre/pages/linear_survey_page.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
