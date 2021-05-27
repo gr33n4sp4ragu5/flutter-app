@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:collective_intelligence_metre/pages/survey.dart';
+import 'package:collective_intelligence_metre/pages/home.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
 import 'package:collective_intelligence_metre/pages/register.dart';
 import 'package:collective_intelligence_metre/providers/auth.dart';
