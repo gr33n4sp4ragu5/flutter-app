@@ -1,0 +1,62 @@
+{
+  "CANCEL": "CANCEL",
+  "NEXT": "NEXT",
+  "BACK": "BACK",
+  "AGREE": "AGREE",
+  "CONTINUE": "CONTINUE",
+  "of": "of",
+  "Review": "Review",
+  "DISAGREE": "DISAGREE",
+  "Discard results and quit?": "Discard results and quit?",
+  "Cancel?": "Cancel?",
+  "NO": "NO",
+  "YES": "YES",
+  "SEE SUMMARY": "SEE SUMMARY",
+  "Are you sure you want to quit?": "Are you sure you want to quit?",
+  "Learn more...": "Learn more...",
+  "GET STARTED": "GET STARTED",
+  "DONE": "DONE",
+  "Tap to answer": "Tap to answer",
+  "Input a number": "Input a number",
+  "Should be between": "Should be between",
+  "and": "and",
+  "Clear": "Clear",
+  "First Name": "First Name",
+  "Last Name": "Last Name",
+  "Select an image": "Select an image",
+  "(Choose one or more options)": "(Choose one or more options)",
+  "(Choose one option)": "(Elige una opción)",
+  "Please sign using your finger on the line below": "Please sign using your finger on the line below",
+  "Review this form below, and tap AGREE if you're ready to continue.": "Review this form below, and tap AGREE if you're ready to continue.",
+
+  "Envidioso": "Envidioso",
+  "Aterrado": "Aterrado",
+  "Arrogante": "Arrogante",
+  "Odioso": "Odioso",
+  "Traviesa": "Traviesa",
+  "Confortante": "Confortante",
+  "Irritada": "Irritada",
+
+
+
+
+  "$": "$",
+  " paid": " paid",
+
+  "KG": "KG",
+  "minutes": "minutes",
+
+
+
+  "Indicate you mood by selecting a picture!": "Indicate you mood by selecting a picture!",
+  "Questions about music": "Questions about music",
+
+  "Finished": "Finished",
+  "Thank you for filling out the survey!": "Thank you for filling out the survey!",
+
+  "Tap to edit:": "Tap to edit:",
+  "Press to input date": "Press to input date",
+  "Press to input time": "Press to input time",
+  "Press to input date range": "Press to input date range"
+
+}

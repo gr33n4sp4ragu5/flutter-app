@@ -60,6 +60,8 @@ flutter:
     - assets/images/readmindeyes/1.png
     - assets/images/readmindeyes/2.png
     - assets/images/readmindeyes/3.png
+    - assets/lang/es.json
+    - assets/lang/en.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
