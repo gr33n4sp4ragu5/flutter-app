@@ -143,7 +143,7 @@ class _RegisterState extends State<Register> {
     );
 
     final otherRadioButton = ListTile(
-        title: const Text('Otro'),
+        title: const Text('Prefiero no contestar'),
         leading: other
     );
 

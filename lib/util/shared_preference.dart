@@ -27,7 +27,7 @@ class UserPreferences {
     prefs.remove("refreshToken");
   }
 
-  Future<String> getToken(args) async {
+  static Future<String> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("token");
     return token;

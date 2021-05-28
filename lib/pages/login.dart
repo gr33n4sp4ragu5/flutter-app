@@ -70,7 +70,7 @@ class _LoginState extends State<Login> {
           if (response['status']) {
             User user = response['user'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/survey');
+            Navigator.pushReplacementNamed(context, '/home');
           } else {
             Flushbar(
               title: "Login fallido",
