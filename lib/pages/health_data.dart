@@ -138,22 +138,17 @@ class _HealthDataState extends State<HealthData> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Plugin example app'),
-            actions: <Widget>[
+    return Scaffold(
+          body: GridView.count(
+            crossAxisCount: 1,
+            children: [
               IconButton(
                 icon: Icon(Icons.file_download),
                 onPressed: () {
                   fetchData();
                 },
-              )
-            ],
-          ),
-          body: Center(
-            child: _content(),
-          )),
-    );
+              ),
+              _content(),]
+          ));
   }
 }
