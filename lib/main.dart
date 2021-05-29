@@ -1,3 +1,4 @@
+import 'package:collective_intelligence_metre/pages/health_data.dart';
 import 'package:flutter/material.dart';
 import 'package:collective_intelligence_metre/pages/home.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
@@ -83,6 +84,7 @@ class MyApp extends StatelessWidget {
             '/login': (context) => Login(),
             '/register': (context) => Register(),
             '/home': (context) => Home(),
+            '/health': (context) => HealthData(),
           }),
     );
   }
