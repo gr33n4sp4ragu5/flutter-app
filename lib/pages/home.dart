@@ -31,6 +31,29 @@ class Home extends StatelessWidget {
           ),
         ]
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.format_list_bulleted),
+            label: 'Encuestas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.watch),
+            label: 'Actividad',
+          ),
+      //    BottomNavigationBarItem(
+      //      icon: Icon(Icons.insert_chart),
+       //     label: 'Estadísticas',
+       //   ),
+        ],
+        currentIndex: 1,
+        selectedItemColor: Colors.amber[800],
+        //onTap: _onItemTapped,
+      ),
     );
   }
 }
