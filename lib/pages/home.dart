@@ -1,6 +1,7 @@
 import 'package:collective_intelligence_metre/pages/linear_survey_page.dart';
-import 'package:collective_intelligence_metre/pages/login.dart';
-import 'package:collective_intelligence_metre/pages/register.dart';
+import 'package:collective_intelligence_metre/pages/profile.dart';
+import 'package:collective_intelligence_metre/pages/surveys.dart';
+import 'package:collective_intelligence_metre/pages/health_data.dart';
 import 'package:collective_intelligence_metre/pages/tds.dart';
 import 'package:flutter/material.dart';
 
@@ -18,9 +19,9 @@ class _HomeState extends State<Home> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static  List<Widget> _widgetOptions = <Widget>[
-    LinearSurveyPage(),
-    Login(),
-    Register()
+    Profile(),
+    Surveys(),
+    HealthData()
   ];
 
   void _onItemTapped(int index) {
