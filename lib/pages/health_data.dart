@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
+import 'package:collective_intelligence_metre/util/app_url.dart';
+import 'package:http/http.dart';
+import 'package:collective_intelligence_metre/util/shared_preference.dart';
+import 'dart:convert';
 
 class HealthData extends StatefulWidget {
   @override
@@ -82,6 +86,9 @@ class _HealthDataState extends State<HealthData> {
 
       print("Steps: $steps");
 
+      ///Send the results to endpoint
+      send_physiological_data(_healthDataList);
+
       /// Update the UI to display the results
       setState(() {
         _state =
@@ -145,6 +152,48 @@ class _HealthDataState extends State<HealthData> {
       return _authorizationNotGranted();
 
     return _contentNotFetched();
+  }
+
+  Future<Map<String, dynamic>> send_physiological_data(List<HealthDataPoint> formatted_result) async {
+
+    final Map<String, dynamic> survey_data = {
+      'survey': formatted_result[0].toString()
+    };
+    print(jsonEncode(survey_data));
+
+    String token = await UserPreferences.getToken();
+
+    return await post(AppUrl.sendPhysiologicalData,
+        body: jsonEncode(survey_data),
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
+        .then(onValue)
+        .catchError(onError);
+  }
+  static Future<FutureOr> onValue(Response response) async {
+    var result;
+    final Map<String, dynamic> responseData = json.decode(response.body);
+
+    print(response.statusCode);
+    if (response.statusCode == 201) {
+
+      result = {
+        'status': true,
+        'message': 'Physiological data successfully sent'
+      };
+    } else {
+      result = {
+        'status': false,
+        'message': 'Failed to send the physiological data',
+        'data': responseData
+      };
+    }
+
+    return result;
+  }
+
+  static onError(error) {
+    print("the error is $error.detail");
+    return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
 
   @override
