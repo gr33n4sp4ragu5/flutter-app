@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io' show Platform;
 
 class HealthData extends StatefulWidget {
   @override
@@ -26,19 +28,28 @@ class _HealthDataState extends State<HealthData> {
   }
 
   Future fetchData() async {
-    /// Get everything from midnight until now
-    DateTime startDate = DateTime(2021, 02, 17, 0, 0, 0);
-    DateTime endDate = DateTime(2021, 02, 19, 23, 59, 59);
+
+    if (Platform.isAndroid) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.activityRecognition,
+        Permission.sensors,
+      ].request();
+
+      print(statuses[Permission.activityRecognition]);
+      print(statuses[Permission.sensors]);
+
+    }
+    
+    DateTime startDate = DateTime(2021, 05, 20, 0, 0, 0);
+    DateTime endDate = DateTime(2021, 05, 29, 23, 59, 59);
+
 
     HealthFactory health = HealthFactory();
 
     /// Define the types to get.
     List<HealthDataType> types = [
       HealthDataType.STEPS,
-      HealthDataType.WEIGHT,
-      HealthDataType.HEIGHT,
-      HealthDataType.BLOOD_GLUCOSE,
-      HealthDataType.DISTANCE_WALKING_RUNNING,
+      HealthDataType.HEART_RATE
     ];
 
     setState(() => _state = AppState.FETCHING_DATA);
