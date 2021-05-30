@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -87,7 +86,7 @@ class _HealthDataState extends State<HealthData> {
       print("Steps: $steps");
 
       ///Send the results to endpoint
-      send_physiological_data(_healthDataList);
+      sendPhysiologicalData(_healthDataList);
 
       /// Update the UI to display the results
       setState(() {
@@ -154,10 +153,10 @@ class _HealthDataState extends State<HealthData> {
     return _contentNotFetched();
   }
 
-  Future<Map<String, dynamic>> send_physiological_data(List<HealthDataPoint> formatted_result) async {
+  Future<Map<String, dynamic>> sendPhysiologicalData(List<HealthDataPoint> formattedResult) async {
 
     final Map<String, dynamic> survey_data = {
-      'survey': formatted_result[0].toString()
+      'formatted_result': getFormatedResult(formattedResult)
     };
     print(jsonEncode(survey_data));
 
@@ -169,6 +168,21 @@ class _HealthDataState extends State<HealthData> {
         .then(onValue)
         .catchError(onError);
   }
+
+  List<Map<String, dynamic>> getFormatedResult (List<HealthDataPoint> rawResults) {
+    List<Map<String, dynamic>> formattedResult = [];
+    rawResults.forEach((raw_result) {formattedResult.add(
+        {'unit': raw_result.unitString,
+         'value': raw_result.value,
+          'date_from': raw_result.dateFrom.toString(),
+          'date_to': raw_result.dateTo.toString(),
+          'type': raw_result.typeString,
+          'device_id': raw_result.deviceId,
+          'platform': raw_result.platform.toString()
+        }); });
+    return formattedResult;
+  }
+
   static Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
