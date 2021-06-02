@@ -170,20 +170,19 @@ class _HealthDataState extends State<HealthData> {
   }
 
   List<Map<String, dynamic>> getFormatedResult (List<HealthDataPoint> rawResults) {
-    List<Map<String, dynamic>> formattedResult = [];
-    rawResults.forEach((raw_result) {
-      formattedResult.add(
-        {'unit': raw_result.unitString,
-         'value': raw_result.value,
-         'date_from': raw_result.dateFrom.toString(),
-         'date_to': raw_result.dateTo.toString(),
-         'type': raw_result.typeString,
-         'device_id': raw_result.deviceId,
-         'platform': raw_result.platform.toString()
-        }
-      );
-    });
-    return formattedResult;
+    return rawResults.map((raw_result) => serialize_result(raw_result)).toList();
+  }
+
+  Map<String, dynamic> serialize_result(HealthDataPoint raw_result) {
+    return {
+      'unit': raw_result.unitString,
+      'value': raw_result.value,
+      'date_from': raw_result.dateFrom.toString(),
+      'date_to': raw_result.dateTo.toString(),
+      'type': raw_result.typeString,
+      'device_id': raw_result.deviceId,
+      'platform': raw_result.platform.toString()
+    };
   }
 
   static Future<FutureOr> onValue(Response response) async {
