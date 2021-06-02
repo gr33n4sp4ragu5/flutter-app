@@ -80,7 +80,7 @@ class TDSSurveyPage extends StatelessWidget {
         textTheme: Typography.blackMountainView,
       ),
       child: RPUITask(
-        task: linearSurveyTaskAlberto,
+        task: tdsLinearSurveyTask,
         onSubmit: (result) {
           resultCallback(result);
         },
