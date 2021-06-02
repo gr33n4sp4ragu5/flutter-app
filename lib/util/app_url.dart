@@ -7,4 +7,5 @@ class AppUrl {
   static const String register = baseURL + "/login/register";
   static const String forgotPassword = baseURL + "/login/forgot-password";
   static const String sendSurveyAnswer = baseURL + "/surveys/answer";
+  static const String sendPhysiologicalData = baseURL + "/physiological/data";
 }
