@@ -69,6 +69,22 @@ RPFormStep stableFormStep = RPFormStep.withTitle(
     "Questions about group interdependency"
 );
 
+List<RPChoice> endsVsMeans = [
+  RPChoice.withParams("The purposes of our team are specified by others, but the means and procedures we use to accomplish them are left to us.", 3),
+  RPChoice.withParams("The means or procedures we are supposed to use in our work are specified in detail by others, but the purposes of our team are left unstated.", 2),
+  RPChoice.withParams("Both the purposes of our team and the means or procedures we are supposed to use in our work are specified in detail by others.", 1),
+  RPChoice.withParams("Neither the purposes nor the means are specified by others for our team.", 0),
+];
+
+RPChoiceAnswerFormat endsVsMeansAnswer =
+RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, endsVsMeans);
+
+RPQuestionStep endVsMeansQuestion = RPQuestionStep.withAnswerFormat(
+  "questionStep0ID",
+  "Ends Vs Means",
+  endsVsMeansAnswer,
+);
+
 RPCompletionStep completionStep = RPCompletionStep("completionID")
   ..title = "Finished"
   ..text = "Thank you for filling out the survey!";
@@ -85,6 +101,7 @@ RPOrderedTask tdsLinearSurveyTask = RPOrderedTask(
     boundedFormStep,
     interdependentFormStep,
     stableFormStep,
+    endVsMeansQuestion,
     completionStep
   ],
 );
