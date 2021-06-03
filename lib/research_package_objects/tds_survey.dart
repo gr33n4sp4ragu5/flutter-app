@@ -25,6 +25,25 @@ RPSliderAnswerFormat.withParams(
     0, 100, divisions: 4,
     options: ["Strongly disagree", "Disagree", "Neither Agree nor Disagree", "Agree", "Strongly Agree"]);
 
+RPTextAnswerFormat textAnswerFormat = RPTextAnswerFormat.withParams("Write your answer here");
+
+RPQuestionStep groupPurposeStep = RPQuestionStep.withAnswerFormat(
+    'groupPurposeStepId', '¿What is the purpouse of the team?', textAnswerFormat);
+
+RPIntegerAnswerFormat numberOfMenIntegerAnswerFormat = RPIntegerAnswerFormat.withParams(0, 200, "");
+RPQuestionStep numberOfMenQuestionStep = RPQuestionStep.withAnswerFormat(
+    "numberOfMenQuestionStepID", "Number of men in the team", numberOfMenIntegerAnswerFormat);
+
+RPBooleanAnswerFormat basicBooleanAnswerFormat =
+RPBooleanAnswerFormat.withParams("Yes", "No");
+
+RPQuestionStep selfGoverningTeamQuestionStep = RPQuestionStep.withAnswerFormat(
+  "booleanQuestionStepID",
+  "Self-governing Team: The team has the authority to manage its work processes, alter its design and organizational features, and specify its main purposes",
+  basicBooleanAnswerFormat,
+);
+
+
 RPQuestionStep bounded0 = RPQuestionStep.withAnswerFormat(
   "bounded0",
   "Team membership is quite clear--everybody knows exactly who is and isn’t on this team.",
@@ -119,6 +138,9 @@ RPOrderedTask tdsLinearSurveyTask = RPOrderedTask(
   "surveyTDS",
   [
     instructionStep,
+    groupPurposeStep,
+    numberOfMenQuestionStep,
+    selfGoverningTeamQuestionStep,
     boundedFormStep,
     interdependentFormStep,
     stableFormStep,
