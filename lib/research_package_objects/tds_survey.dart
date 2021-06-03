@@ -5,7 +5,7 @@ RPSliderAnswerFormat accurateSlider = RPSliderAnswerFormat.withParams(0, 100, su
 
 RPSliderAnswerFormat frequencySlider =
   RPSliderAnswerFormat.withParams(
-      0, 100, suffix: "% accurate", divisions: 4,
+      0, 100, divisions: 4,
       options: ["Never", "Not Frequently", "Somewhat Frequently",
                 "Quite Frequently", "Very Frequently"]);
 
@@ -69,17 +69,17 @@ RPFormStep boundedFormStep = RPFormStep.withTitle(
 RPQuestionStep interdependent0 = RPQuestionStep.withAnswerFormat(
   "interdependent0",
   "Members of this team have their own individual jobs to do, with little need for them to work together.",
-  accurateSlider,
+  frequencySlider,
 );
 RPQuestionStep interdependent1 = RPQuestionStep.withAnswerFormat(
   "interdependent1",
   "There is so much ambiguity about who is on this team that it would be nearly impossible to generate an accurate membership list.",
-  accurateSlider,
+  helpfulnessSlider,
 );
 RPQuestionStep interdependent2 = RPQuestionStep.withAnswerFormat(
   "interdependent2",
   "Anyone who knows this team could accurately name all its members.",
-  accurateSlider,
+  frequencySlider2,
 );
 
 RPFormStep interdependentFormStep = RPFormStep.withTitle(
@@ -90,7 +90,7 @@ RPFormStep interdependentFormStep = RPFormStep.withTitle(
 RPQuestionStep stable0 = RPQuestionStep.withAnswerFormat(
   "stable0",
   "Members of this team have their own individual jobs to do, with little need for them to work together.",
-  accurateSlider,
+  agreementSlider,
 );
 RPQuestionStep stable1 = RPQuestionStep.withAnswerFormat(
   "stable1",
