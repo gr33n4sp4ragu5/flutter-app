@@ -1,8 +1,10 @@
 import 'package:collective_intelligence_metre/pages/linear_survey_page.dart';
+import 'package:collective_intelligence_metre/pages/login.dart';
 import 'package:collective_intelligence_metre/pages/profile.dart';
 import 'package:collective_intelligence_metre/pages/surveys.dart';
 import 'package:collective_intelligence_metre/pages/health_data.dart';
 import 'package:collective_intelligence_metre/pages/tds.dart';
+import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 
 /// This is the stateful widget that the main application instantiates.
@@ -35,6 +37,17 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text('ColIntMet'),
+        actions: <Widget>[
+          IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            UserPreferences().removeUser();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Login()),
+            );
+          },
+        )]
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
