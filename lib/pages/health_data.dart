@@ -127,11 +127,11 @@ class _HealthDataState extends State<HealthData> {
   }
 
   Widget _contentNoData() {
-    return Text('No Data to show');
+    return Text('No se han encontrado datos');
   }
 
   Widget _contentNotFetched() {
-    return Text('Press the download button to fetch data');
+    return Text('Pulsa el botón para compartir tus datos fisiológicos');
   }
 
   Widget _authorizationNotGranted() {
@@ -214,17 +214,16 @@ class _HealthDataState extends State<HealthData> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-          body: GridView.count(
+    return GridView.count(
             crossAxisCount: 1,
             children: [
               IconButton(
-                icon: Icon(Icons.file_download),
+                icon: Icon(Icons.file_upload),
                 onPressed: () {
                   fetchData();
                 },
               ),
               _content(),]
-          ));
+          );
   }
 }
