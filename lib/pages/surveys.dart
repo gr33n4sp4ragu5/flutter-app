@@ -11,18 +11,20 @@ class Surveys extends StatelessWidget {
               "Encuestas disponibles",
               style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
             ),
-            ElevatedButton(
-              child: Text('Reading the mind in the eyes'),
-              onPressed: () {
+            ListTile(
+              title: Text('Reading the mind in the eyes'),
+              tileColor: Color(0xFF36ABC4),
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LinearSurveyPage()),
                 );
               },
             ),
-            ElevatedButton(
-              child: Text('Team Diagnostic Survey'),
-              onPressed: () {
+            ListTile(
+              title: Text('Team Diagnostic Survey'),
+              tileColor: Color(0xFF36ABC4),
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => TDSSurveyPage()),
