@@ -5,29 +5,38 @@ import 'package:flutter/material.dart';
 class Surveys extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return ListView(
           children: [
-            ElevatedButton(
-              child: Text('Comienza a responder una encuesta'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LinearSurveyPage()),
-                );
-              },
+            Text(
+              "Encuestas disponibles",
+              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
             ),
-            ElevatedButton(
-              child: Text('Comienza a responder una encuesta'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TDSSurveyPage()),
-                );
-              },
+            Card(
+              child: ListTile(
+                title: Text('Reading the mind in the eyes'),
+                tileColor: Color(0xFF36ABC4),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LinearSurveyPage()),
+                  );
+                },
+              ),
             ),
+            Card(
+              child: ListTile(
+                title: Text('Team Diagnostic Survey'),
+                tileColor: Color(0xFF36ABC4),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TDSSurveyPage()),
+                  );
+                },
+              ),
+            )
+
           ]
-      ),
-    );
+      );
   }
 }
