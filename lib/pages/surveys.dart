@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 class Surveys extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return ListView(
           children: [
+            Text(
+              "Encuestas disponibles",
+              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+            ),
             ElevatedButton(
-              child: Text('Comienza a responder una encuesta'),
+              child: Text('Reading the mind in the eyes'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -18,7 +21,7 @@ class Surveys extends StatelessWidget {
               },
             ),
             ElevatedButton(
-              child: Text('Comienza a responder una encuesta'),
+              child: Text('Team Diagnostic Survey'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -27,7 +30,6 @@ class Surveys extends StatelessWidget {
               },
             ),
           ]
-      ),
-    );
+      );
   }
 }
