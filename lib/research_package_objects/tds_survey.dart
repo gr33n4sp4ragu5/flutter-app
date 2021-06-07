@@ -133,9 +133,13 @@ RPCompletionStep completionStep = RPCompletionStep("completionID")
   ..text = "Thank you for filling out the survey!";
 
 RPInstructionStep instructionStep = RPInstructionStep(
-    identifier: "instructionID", title: "Welcome!", detailText: "For the sake of science of course...")
+    identifier: "instructionID", title: "Welcome!")
   ..text =
       "Please fill out this questionnaire";
+RPInstructionStep sliderTutorial = RPInstructionStep(
+    identifier: "instructionID", title: "Welcome!", imagePath: "assets/images/slider_example.png")
+  ..text =
+      "The following questions have a slider and the selected option is the one which is shown on top of it.\n\nIf you want to select the option which is by default, you need to tap once in the selected option, otherwise it won't let you go to the next page.";
 
 RPOrderedTask tdsLinearSurveyTask = RPOrderedTask(
   "surveyTDS",
@@ -144,6 +148,7 @@ RPOrderedTask tdsLinearSurveyTask = RPOrderedTask(
     groupPurposeStep,
     numberOfMenQuestionStep,
     selfGoverningTeamQuestionStep,
+    sliderTutorial,
     boundedFormStep,
     interdependentFormStep,
     stableFormStep,
