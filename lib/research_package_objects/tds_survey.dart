@@ -1,28 +1,31 @@
 import 'package:research_package/model.dart';
 
 
-RPSliderAnswerFormat accurateSlider = RPSliderAnswerFormat.withParams(0, 100, suffix: "% accurate", divisions: 4);
+RPSliderAnswerFormat accurateSlider =   RPSliderAnswerFormat.withParams(
+    1, 5, divisions: 4,
+    options: ["Highly Inaccurate", "Inaccurate", "Somewhat Accurate",
+      "Accurate", "Highly Accurate"]);
 
 RPSliderAnswerFormat frequencySlider =
   RPSliderAnswerFormat.withParams(
-      0, 100, divisions: 4,
+      1, 5, divisions: 4,
       options: ["Never", "Not Frequently", "Somewhat Frequently",
                 "Quite Frequently", "Very Frequently"]);
 
 RPSliderAnswerFormat helpfulnessSlider =
   RPSliderAnswerFormat.withParams(
-      0, 100, divisions: 4,
+      1, 5, divisions: 4,
       options: ["Not at all helpful", "Not so helpful", "Somewhat helpful",
                 "Very helpful", "Extremely helpful"]);
 
 RPSliderAnswerFormat frequencySlider2 =
   RPSliderAnswerFormat.withParams(
-      0, 100, divisions: 3,
+      1, 4, divisions: 3,
       options: ["Never", "Seldom", "Sometimes", "Often"]);
 
 RPSliderAnswerFormat agreementSlider =
 RPSliderAnswerFormat.withParams(
-    0, 100, divisions: 4,
+    1, 5, divisions: 4,
     options: ["Strongly disagree", "Disagree", "Neither Agree nor Disagree", "Agree", "Strongly Agree"]);
 
 RPTextAnswerFormat textAnswerFormat = RPTextAnswerFormat.withParams("Write your answer here");
@@ -132,7 +135,7 @@ RPCompletionStep completionStep = RPCompletionStep("completionID")
 RPInstructionStep instructionStep = RPInstructionStep(
     identifier: "instructionID", title: "Welcome!", detailText: "For the sake of science of course...")
   ..text =
-      "Please fill out this questionnaire!\n\nIn this questionnaire the questions will come after each other in a given order. You still have the chance to skip a some of them though.";
+      "Please fill out this questionnaire";
 
 RPOrderedTask tdsLinearSurveyTask = RPOrderedTask(
   "surveyTDS",
