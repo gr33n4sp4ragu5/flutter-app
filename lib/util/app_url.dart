@@ -8,4 +8,6 @@ class AppUrl {
   static const String forgotPassword = baseURL + "/login/forgot-password";
   static const String sendSurveyAnswer = baseURL + "/surveys/answer";
   static const String sendPhysiologicalData = baseURL + "/physiological/data";
+  static const String getProfileData = baseURL + "/profile/data";
+  static const String modifyProfileData = baseURL + "/profie/edit";
 }
