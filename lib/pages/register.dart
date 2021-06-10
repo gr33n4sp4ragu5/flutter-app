@@ -30,14 +30,13 @@ class _RegisterState extends State<Register> {
   DateTime _birthdate;
   Gender _gender;
   int _genderSelectedValue = 0;
-  DateTime selectedDate;
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
 
   @override
   initState() {
     super.initState();
-    selectedDate = DateTime(1990);
+    _birthdate = DateTime(1990);
   }
 
   @override
@@ -89,10 +88,10 @@ class _RegisterState extends State<Register> {
     final birthdateField = InputDatePickerFormField(
       firstDate: DateTime(1900),
       lastDate: DateTime(2005),
-      initialDate: selectedDate,
+      initialDate: _birthdate,
       onDateSubmitted: (date) {
         setState(() {
-          selectedDate = date;
+          _birthdate = date;
         });
       },
     );
