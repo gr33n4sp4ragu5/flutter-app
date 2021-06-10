@@ -1,5 +1,5 @@
 class AppUrl {
-  static const String liveBaseURL = "http://138.4.110.213:8000";
+  static const String liveBaseURL = "http://54.175.91.198:8000";
   static const String localBaseURL = "http://192.168.56.101:8000";
 
   static const String baseURL = liveBaseURL;
