@@ -29,6 +29,7 @@ class _ProfileState extends State<Profile> {
   final nameController = new TextEditingController();
   final surnamesController = new TextEditingController();
   final birthdateController = new TextEditingController();
+  final genderController = new TextEditingController();
   Future<dynamic> _profileData;
 
 // Only fetch data once and set its text value
@@ -50,9 +51,24 @@ class _ProfileState extends State<Profile> {
       nameController.text = profile_data["name"];
       surnamesController.text = profile_data["surnames"];
       birthdateController.text = profile_data["birthdate"];
+      genderController.text = translateGender(profile_data["gender"]);
 
       return profile_data;
     });
+  }
+
+  String translateGender(String gender) {
+    switch(gender){
+      case "male":
+        return "H";
+        break;
+      case "female":
+        return "M";
+        break;
+      case "other":
+        return "N/A";
+        break;
+    }
   }
 
   deserializeProfileData(Response response) {
@@ -151,6 +167,14 @@ class _ProfileState extends State<Profile> {
       controller: birthdateController,
     );
 
+    final genderField = TextFormField(
+      autofocus: false,
+      validator: validateName,
+      enabled: false,
+      controller: genderController,
+    );
+
+
     if(snapshot.connectionState == ConnectionState.done){
       return SafeArea(
         child: Scaffold(
@@ -179,13 +203,8 @@ class _ProfileState extends State<Profile> {
                       SizedBox(height: 10.0),
                       surnamesField,
                       SizedBox(height: 10.0),
-                      label("Seleccione su sexo:"),
-                      SizedBox(height: 10.0),
-                      maleRadioButton,
-                      SizedBox(height: 10.0),
-                      femaleRadioButton,
-                      SizedBox(height: 20.0),
-                      otherRadioButton,
+                      label("Sexo:"),
+                      genderField,
                       longButtons("Guardar cambios", modifyProfileData),
                       // auth.loggedInStatus == Status.Authenticating
                       //   ? loading
