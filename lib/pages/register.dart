@@ -30,14 +30,25 @@ class _RegisterState extends State<Register> {
   DateTime _birthdate;
   Gender _gender;
   int _genderSelectedValue = 0;
-  DateTime selectedDate;
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _birthdate,
+        firstDate: DateTime(1920),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != _birthdate)
+      setState(() {
+        _birthdate = picked;
+      });
+  }
 
   @override
   initState() {
     super.initState();
-    selectedDate = DateTime(1990);
+    _birthdate = DateTime(1990);
   }
 
   @override
@@ -86,15 +97,18 @@ class _RegisterState extends State<Register> {
       onSaved: (value) => _surnames = value,
     );
 
-    final birthdateField = InputDatePickerFormField(
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2005),
-      initialDate: selectedDate,
-      onDateSubmitted: (date) {
-        setState(() {
-          selectedDate = date;
-        });
-      },
+    final birthdateField = Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text("${_birthdate.toLocal()}".split(' ')[0]),
+          SizedBox(height: 20.0,),
+          ElevatedButton(
+            onPressed: () => _selectDate(context),
+            child: Text('Seleccionar fecha'),
+          ),
+        ],
+      ),
     );
 
     final male = Radio(

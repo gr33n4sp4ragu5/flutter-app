@@ -73,7 +73,7 @@ class AuthProvider with ChangeNotifier {
         'password': password,
         'name': name,
         'surnames': surnames,
-        'birthdate': birthdate,
+        'birthdate': birthdate.toIso8601String().substring(0, 10),
         'gender': gender.gender
     };
 
