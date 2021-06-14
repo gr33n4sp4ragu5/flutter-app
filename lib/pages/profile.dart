@@ -28,6 +28,7 @@ class _ProfileState extends State<Profile> {
   final emailController = new TextEditingController();
   final nameController = new TextEditingController();
   final surnamesController = new TextEditingController();
+  final birthdateController = new TextEditingController();
   Future<dynamic> _profileData;
 
 // Only fetch data once and set its text value
@@ -44,10 +45,11 @@ class _ProfileState extends State<Profile> {
           headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
           .then(deserializeProfileData)
           .catchError(onError);
-      print(profile_data.runtimeType);
+      print(profile_data);
       emailController.text = profile_data["email"];
       nameController.text = profile_data["name"];
       surnamesController.text = profile_data["surnames"];
+      birthdateController.text = profile_data["birthdate"];
 
       return profile_data;
     });
@@ -123,7 +125,7 @@ class _ProfileState extends State<Profile> {
     final emailField = TextFormField(
       autofocus: false,
       validator: validateEmail,
-      onSaved: (value) => _email = value,
+      enabled: false,
       decoration: buildInputDecoration(ENTER_EMAIL, Icons.email),
       controller: emailController,
     );
@@ -142,65 +144,11 @@ class _ProfileState extends State<Profile> {
       controller: surnamesController,
     );
 
-    final birthdateField = InputDatePickerFormField(
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2005),
-      initialDate: selectedDate,
-      onDateSubmitted: (date) {
-        setState(() {
-          selectedDate = date;
-        });
-      },
-    );
-
-    final male = Radio(
-        value: 1,
-        groupValue: _genderSelectedValue,
-        onChanged: (T) {
-          _gender = new Gender('male');
-          setState(() {
-            print(T);
-            _genderSelectedValue = T;
-          });
-        }
-    );
-    final female = Radio(
-        value: 2,
-        groupValue: _genderSelectedValue,
-        onChanged: (T) {
-          _gender = new Gender('female');
-          setState(() {
-            print(T);
-            _genderSelectedValue = T;
-          });
-        }
-    );
-
-    final other = Radio(
-        value: 3,
-        groupValue: _genderSelectedValue,
-        onChanged: (T) {
-          _gender = new Gender('other');
-          setState(() {
-            print(T);
-            _genderSelectedValue = T;
-          });
-        }
-    );
-
-    final maleRadioButton = ListTile(
-        title: const Text('Hombre'),
-        leading: male
-    );
-
-    final femaleRadioButton = ListTile(
-        title: const Text('Mujer'),
-        leading: female
-    );
-
-    final otherRadioButton = ListTile(
-        title: const Text('Prefiero no contestar'),
-        leading: other
+    final birthdateField = TextFormField(
+      autofocus: false,
+      validator: validateName,
+      enabled: false,
+      controller: birthdateController,
     );
 
     if(snapshot.connectionState == ConnectionState.done){
