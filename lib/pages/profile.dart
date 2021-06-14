@@ -58,6 +58,8 @@ class _ProfileState extends State<Profile> {
 
   deserializeProfileData(Response response) {
     final Map<String, dynamic> responseData = json.decode(response.body)["profile_data"];
+    setState(() => _name = responseData["name"]);
+    setState(() => _surnames = responseData["surnames"]);
     return responseData;
   }
 
@@ -99,12 +101,15 @@ class _ProfileState extends State<Profile> {
   }
 
   Map<String, dynamic> getChanges() {
-    return {"name": "Alberto"};
+    return {"name": _name, "surnames": _surnames};
   }
 
   Future<Map<String, dynamic>> modifyProfileData() async {
+    final form = formKey.currentState;
+    form.save();
 
     final Map<String, dynamic> survey_data = getChanges();
+    print(survey_data);
 
     String token = await UserPreferences.getToken();
 
@@ -116,6 +121,7 @@ class _ProfileState extends State<Profile> {
   }
 
   static Future<FutureOr> onValue(Response response) async {
+    print("Estamos en value");
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -138,6 +144,7 @@ class _ProfileState extends State<Profile> {
   }
 
   static onError(error) {
+    print(error);
     print("the error is $error");
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
@@ -233,53 +240,65 @@ class _ProfileState extends State<Profile> {
         leading: other
     );
 
+    if(snapshot.connectionState == ConnectionState.done){
+      return SafeArea(
+        child: Scaffold(
+          body: Container(
+            padding: EdgeInsets.all(40.0),
+            child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 15.0),
+                      label("Email"),
+                      SizedBox(height: 5.0),
+                      emailField,
+                      SizedBox(height: 15.0),
+                      label("Fecha de nacimiento"),
+                      SizedBox(height: 10.0),
+                      birthdateField,
+                      SizedBox(height: 15.0),
+                      label("Nombre"),
+                      SizedBox(height: 10.0),
+                      nameField,
+                      SizedBox(height: 15.0),
+                      label("Apellidos"),
+                      SizedBox(height: 10.0),
+                      surnamesField,
+                      SizedBox(height: 10.0),
+                      label("Seleccione su sexo:"),
+                      SizedBox(height: 10.0),
+                      maleRadioButton,
+                      SizedBox(height: 10.0),
+                      femaleRadioButton,
+                      SizedBox(height: 20.0),
+                      otherRadioButton,
+                      longButtons("Guardar cambios", modifyProfileData),
+                      // auth.loggedInStatus == Status.Authenticating
+                      //   ? loading
+                      // : longButtons("Guardar cambios", modifyProfileData),
+                    ],
+                  ),
+                )
 
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.all(40.0),
-          child: Form(
-              key: formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 15.0),
-                    label("Email"),
-                    SizedBox(height: 5.0),
-                    emailField,
-                    SizedBox(height: 15.0),
-                    label("Fecha de nacimiento"),
-                    SizedBox(height: 10.0),
-                    birthdateField,
-                    SizedBox(height: 15.0),
-                    label("Nombre"),
-                    SizedBox(height: 10.0),
-                    nameField,
-                    SizedBox(height: 15.0),
-                    label("Apellidos"),
-                    SizedBox(height: 10.0),
-                    surnamesField,
-                    SizedBox(height: 10.0),
-                    label("Seleccione su sexo:"),
-                    SizedBox(height: 10.0),
-                    maleRadioButton,
-                    SizedBox(height: 10.0),
-                    femaleRadioButton,
-                    SizedBox(height: 20.0),
-                    otherRadioButton,
-                    longButtons("Guardar cambios", modifyProfileData),
-                    // auth.loggedInStatus == Status.Authenticating
-                    //   ? loading
-                    // : longButtons("Guardar cambios", modifyProfileData),
-                  ],
-                ),
-              )
-
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return  Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircularProgressIndicator(),
+          Text(" Guardando los cambios... Por favor espere")
+        ],
+      );
+
+    }
+
+
   }
 
   @override
@@ -369,7 +388,6 @@ class _ProfileState extends State<Profile> {
         leading: other
     );
 
-/*
     var loading = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -378,7 +396,7 @@ class _ProfileState extends State<Profile> {
       ],
     );
 
- */
+
 
  */
 
