@@ -8,8 +8,8 @@ class PreloadedSurveys {
 
   void preloadSurveys() {
     List surveys = [];
-    CIMSurvey read_mind_eyes = new CIMSurvey(LinearSurveyPage(), "Read mind eyes", SurveyState.NEW, "ninguno");
-    CIMSurvey team_diagnostic_survey = new CIMSurvey(TDSSurveyPage(), "TeamDiagnosticSurvey", SurveyState.NEW, "ninguno");
+    CIMSurvey read_mind_eyes = new CIMSurvey(LinearSurveyPage(), "ReadMindEyes", SurveyState.NEW, "ninguno", "Reading the mind in the eyes");
+    CIMSurvey team_diagnostic_survey = new CIMSurvey(TDSSurveyPage(), "TeamDiagnosticSurvey", SurveyState.NEW, "ninguno", "Team Diagnostic Survey");
     surveys.add(read_mind_eyes);
     surveys.add(team_diagnostic_survey);
     preloaded_surveys = surveys;

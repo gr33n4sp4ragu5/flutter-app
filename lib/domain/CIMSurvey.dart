@@ -9,6 +9,7 @@ class CIMSurvey {
   SurveyState state;
   String nextQuestionStep;
   String surveyId;
+  String title;
 
-  CIMSurvey(this.surveyPage, this.surveyId, this.state, this.nextQuestionStep);
+  CIMSurvey(this.surveyPage, this.surveyId, this.state, this.nextQuestionStep, this.title);
 }
