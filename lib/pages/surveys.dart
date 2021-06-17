@@ -12,7 +12,13 @@ class _SurveysState extends State<Surveys> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-          children: formatSurveys(context));
+          children: [
+            Text(
+            "Encuestas disponibles",
+            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+          ),
+          ...formatSurveys(context)
+          ]);
   }
 
   List<Widget> formatSurveys(BuildContext context) {
