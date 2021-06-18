@@ -51,7 +51,7 @@ class _SurveysState extends State<Surveys> {
         "Encuestas disponibles",
         style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
       )];
-    available_surveys.forEach((element) {formattedSurveys.add(element.toWidget(context));});
+    available_surveys.forEach((element) {formattedSurveys.add(surveyToWidget(context, element.title, element.surveyPage));});
     return formattedSurveys;
   }
 
@@ -63,7 +63,7 @@ class _SurveysState extends State<Surveys> {
         "Encuestas finalizadas",
         style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
       )];
-    finished_surveys.forEach((element) {formattedSurveys.add(element.toWidget(context, enabled: false));});
+    finished_surveys.forEach((element) {formattedSurveys.add(surveyToWidget(context, element.title, element.surveyPage, enabled: false));});
     return formattedSurveys;
   }
 
@@ -83,6 +83,22 @@ class _SurveysState extends State<Surveys> {
         ],
       );
     }
+  }
+
+  Widget surveyToWidget(BuildContext context, title, surveyPage, {bool enabled=true}) {
+    return Card(
+      child: ListTile(
+        title: Text(title),
+        tileColor: Color(0xFF36ABC4),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => surveyPage),
+          );
+        },
+        enabled: enabled,
+      ),
+    );
   }
   
 }
