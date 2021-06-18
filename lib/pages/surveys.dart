@@ -17,14 +17,19 @@ class _SurveysState extends State<Surveys> {
             "Encuestas disponibles",
             style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
           ),
-          ...formatSurveys(context)
+          ...formatAvailableSurveys(context)
           ]);
   }
 
-  List<Widget> formatSurveys(BuildContext context) {
+  List<Widget> formatAvailableSurveys(BuildContext context) {
     List<CIMSurvey> surveys = widget.preloadedSurveys.preloaded_surveys;
-    List<Widget> formattedSurveys = [];
-    surveys.forEach((element) {formattedSurveys.add(element.toWidget(context));});
+    List<CIMSurvey> available_surveys = surveys.where((survey) => SurveyState.NEW == survey.state).toList();
+    List<Widget> formattedSurveys = [
+      Text(
+        "Encuestas disponibles",
+        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+    )];
+    available_surveys.forEach((element) {formattedSurveys.add(element.toWidget(context));});
     return formattedSurveys;
   }
 }
