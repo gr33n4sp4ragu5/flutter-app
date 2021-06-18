@@ -13,11 +13,7 @@ class _SurveysState extends State<Surveys> {
   Widget build(BuildContext context) {
     return ListView(
           children: [
-            Text(
-            "Encuestas disponibles",
-            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
-          ),
-          ...formatAvailableSurveys(context)
+          ...formatAvailableSurveys(context), ...formatUnavailableSurveys(context)
           ]);
   }
 
@@ -30,6 +26,18 @@ class _SurveysState extends State<Surveys> {
         style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
     )];
     available_surveys.forEach((element) {formattedSurveys.add(element.toWidget(context));});
+    return formattedSurveys;
+  }
+
+  List<Widget> formatUnavailableSurveys(BuildContext context) {
+    List<CIMSurvey> surveys = widget.preloadedSurveys.preloaded_surveys;
+    List<CIMSurvey> finished_surveys = surveys.where((survey) => SurveyState.FINISHED == survey.state).toList();
+    List<Widget> formattedSurveys = [
+      Text(
+        "Encuestas finalizadas",
+        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+      )];
+    finished_surveys.forEach((element) {formattedSurveys.add(element.toWidget(context, enabled: false));});
     return formattedSurveys;
   }
 }
