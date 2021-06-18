@@ -1,21 +1,42 @@
 import 'package:collective_intelligence_metre/domain/CIMSurvey.dart';
 import 'package:collective_intelligence_metre/surveys/surveys_preloaded.dart';
+import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:async/async.dart';
 
 class Surveys extends StatefulWidget {
   PreloadedSurveys preloadedSurveys = new PreloadedSurveys();
+  
 
   @override
   _SurveysState createState() => _SurveysState();
 }
 
 class _SurveysState extends State<Surveys> {
+  Future<dynamic> _preloaded_surveys;
+
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
+  @override
+  initState() {
+    super.initState();
+    _preloaded_surveys = getFinishedSurveys();
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return ListView(
-          children: [
-          ...formatAvailableSurveys(context), ...formatUnavailableSurveys(context)
-          ]);
+    return FutureBuilder(
+      future: _preloaded_surveys,
+      builder: populateSurveys,
+    );
+  }
+
+  Future<dynamic> getFinishedSurveys() {
+    return this._memoizer.runOnce(() async {
+      PreloadedSurveys preloadedSurveys = widget.preloadedSurveys;
+      await preloadedSurveys.preloadSurveys();
+      return preloadedSurveys;
+    });
   }
 
   List<Widget> formatAvailableSurveys(BuildContext context) {
@@ -29,7 +50,7 @@ class _SurveysState extends State<Surveys> {
       Text(
         "Encuestas disponibles",
         style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
-    )];
+      )];
     available_surveys.forEach((element) {formattedSurveys.add(element.toWidget(context));});
     return formattedSurveys;
   }
@@ -45,4 +66,23 @@ class _SurveysState extends State<Surveys> {
     finished_surveys.forEach((element) {formattedSurveys.add(element.toWidget(context, enabled: false));});
     return formattedSurveys;
   }
+
+  Widget populateSurveys(BuildContext context, AsyncSnapshot snapshot) {
+
+    if(snapshot.connectionState == ConnectionState.done){
+      return ListView(
+          children: [
+            ...formatAvailableSurveys(context), ...formatUnavailableSurveys(context)
+          ]);
+    } else {
+      return  Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircularProgressIndicator(),
+          Text(" Guardando los cambios... Por favor espere")
+        ],
+      );
+    }
+  }
+  
 }
