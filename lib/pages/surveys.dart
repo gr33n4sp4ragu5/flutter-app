@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class Surveys extends StatefulWidget {
   PreloadedSurveys preloadedSurveys = new PreloadedSurveys();
+
   @override
   _SurveysState createState() => _SurveysState();
 }
@@ -18,7 +19,11 @@ class _SurveysState extends State<Surveys> {
   }
 
   List<Widget> formatAvailableSurveys(BuildContext context) {
-    List<CIMSurvey> surveys = widget.preloadedSurveys.preloaded_surveys;
+    PreloadedSurveys preloadedSurveys = widget.preloadedSurveys;
+    preloadedSurveys.preloadSurveys();
+    List<CIMSurvey> surveys = preloadedSurveys.preloaded_surveys;
+    print("Las encuestas cargadas son");
+    print(surveys.toString());
     List<CIMSurvey> available_surveys = surveys.where((survey) => SurveyState.NEW == survey.state).toList();
     List<Widget> formattedSurveys = [
       Text(
