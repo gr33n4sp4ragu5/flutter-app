@@ -15,8 +15,6 @@ class Surveys extends StatefulWidget {
 class _SurveysState extends State<Surveys> {
   Future<dynamic> _preloaded_surveys;
 
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
-
   @override
   initState() {
     super.initState();
@@ -32,11 +30,13 @@ class _SurveysState extends State<Surveys> {
   }
 
   Future<dynamic> getFinishedSurveys() {
-    return this._memoizer.runOnce(() async {
-      PreloadedSurveys preloadedSurveys = widget.preloadedSurveys;
-      await preloadedSurveys.preloadSurveys();
-      return preloadedSurveys;
-    });
+    return auxFunction();
+  }
+
+  auxFunction() async {
+    PreloadedSurveys preloadedSurveys = widget.preloadedSurveys;
+    await preloadedSurveys.preloadSurveys();
+    return preloadedSurveys;
   }
 
   List<Widget> formatAvailableSurveys(BuildContext context) {
