@@ -90,11 +90,14 @@ class _SurveysState extends State<Surveys> {
       child: ListTile(
         title: Text(title),
         tileColor: Color(0xFF36ABC4),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => surveyPage),
           );
+          setState(() {
+            _preloaded_surveys = getFinishedSurveys();
+          });
         },
         enabled: enabled,
       ),
