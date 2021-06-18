@@ -14,7 +14,7 @@ class CIMSurvey {
 
   CIMSurvey(this.surveyPage, this.surveyId, this.state, this.nextQuestionStep, this.title);
 
-  Widget toWidget(BuildContext context) {
+  Widget toWidget(BuildContext context, {bool enabled=true}) {
     return Card(
       child: ListTile(
         title: Text(this.title),
@@ -25,6 +25,7 @@ class CIMSurvey {
             MaterialPageRoute(builder: (context) => this.surveyPage),
           );
         },
+        enabled: enabled,
       ),
     );
   }
