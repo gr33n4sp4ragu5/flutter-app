@@ -14,19 +14,4 @@ class CIMSurvey {
 
   CIMSurvey(this.surveyPage, this.surveyId, this.state, this.nextQuestionStep, this.title);
 
-  Widget toWidget(BuildContext context, {bool enabled=true}) {
-    return Card(
-      child: ListTile(
-        title: Text(this.title),
-        tileColor: Color(0xFF36ABC4),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => this.surveyPage),
-          );
-        },
-        enabled: enabled,
-      ),
-    );
-  }
 }
