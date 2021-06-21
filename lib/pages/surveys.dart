@@ -1,50 +1,38 @@
 import 'package:collective_intelligence_metre/domain/CIMSurvey.dart';
 import 'package:collective_intelligence_metre/surveys/surveys_preloaded.dart';
-import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:async/async.dart';
 
 class Surveys extends StatefulWidget {
-  PreloadedSurveys preloadedSurveys = new PreloadedSurveys();
-  
-
   @override
   _SurveysState createState() => _SurveysState();
 }
 
 class _SurveysState extends State<Surveys> {
-  Future<dynamic> _preloaded_surveys;
+  PreloadedSurveys preloadedSurveys = new PreloadedSurveys();
 
-  @override
-  initState() {
-    super.initState();
-    _preloaded_surveys = getFinishedSurveys();
+  void updatePreloadedSurveysState() async {
+    PreloadedSurveys aux =  await getPreloadedSurveys();
+    setState(() {preloadedSurveys = aux;});
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _preloaded_surveys,
+      future: getPreloadedSurveys(),
       builder: populateSurveys,
     );
   }
 
-  Future<dynamic> getFinishedSurveys() {
-    return auxFunction();
-  }
-
-  auxFunction() async {
-    PreloadedSurveys preloadedSurveys = widget.preloadedSurveys;
+  Future<PreloadedSurveys> getPreloadedSurveys() async {
+    PreloadedSurveys preloadedSurveys = this.preloadedSurveys;
     await preloadedSurveys.preloadSurveys();
     return preloadedSurveys;
   }
 
   List<Widget> formatAvailableSurveys(BuildContext context) {
-    PreloadedSurveys preloadedSurveys = widget.preloadedSurveys;
+    PreloadedSurveys preloadedSurveys = this.preloadedSurveys;
     preloadedSurveys.preloadSurveys();
     List<CIMSurvey> surveys = preloadedSurveys.preloaded_surveys;
-    print("Las encuestas cargadas son");
-    print(surveys.toString());
     List<CIMSurvey> available_surveys = surveys.where((survey) => SurveyState.NEW == survey.state).toList();
     List<Widget> formattedSurveys = [
       Text(
@@ -56,7 +44,7 @@ class _SurveysState extends State<Surveys> {
   }
 
   List<Widget> formatUnavailableSurveys(BuildContext context) {
-    List<CIMSurvey> surveys = widget.preloadedSurveys.preloaded_surveys;
+    List<CIMSurvey> surveys = this.preloadedSurveys.preloaded_surveys;
     List<CIMSurvey> finished_surveys = surveys.where((survey) => SurveyState.FINISHED == survey.state).toList();
     List<Widget> formattedSurveys = [
       Text(
@@ -68,7 +56,6 @@ class _SurveysState extends State<Surveys> {
   }
 
   Widget populateSurveys(BuildContext context, AsyncSnapshot snapshot) {
-
     if(snapshot.connectionState == ConnectionState.done){
       return ListView(
           children: [
@@ -95,9 +82,7 @@ class _SurveysState extends State<Surveys> {
             context,
             MaterialPageRoute(builder: (context) => surveyPage),
           );
-          setState(() {
-            _preloaded_surveys = getFinishedSurveys();
-          });
+          updatePreloadedSurveysState();
         },
         enabled: enabled,
       ),

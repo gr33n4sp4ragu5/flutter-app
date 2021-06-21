@@ -4,7 +4,6 @@ import 'package:collective_intelligence_metre/domain/CIMSurvey.dart';
 import 'package:collective_intelligence_metre/util/app_url.dart';
 import 'package:collective_intelligence_metre/util/errors.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../pages/linear_survey_page.dart';
@@ -12,12 +11,6 @@ import '../pages/tds.dart';
 
 class PreloadedSurveys {
   List<CIMSurvey> preloaded_surveys = [];
-/*
-  PreloadedSurveys() {
-    preloadSurveys();
-  }
-
- */
 
   void preloadSurveys() async {
     List<CIMSurvey>  surveys = [];
@@ -33,8 +26,6 @@ class PreloadedSurveys {
 
   Future<SurveyState> getCurrentSurveyState(String surveyId) async {
     String token = await UserPreferences.getToken();
-    print("The token is:");
-    print(token);
 
     final finished_surveys = await get(AppUrl.getFinishedSurveys,
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
