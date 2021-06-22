@@ -51,7 +51,7 @@ class _LoginState extends State<Login> {
         TextButton(
           child: Text("Registrarse", style: TextStyle(fontWeight: FontWeight.w300)),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/register');
+            Navigator.pushNamed(context, '/register');
           },
         ),
       ],
