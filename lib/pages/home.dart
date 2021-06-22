@@ -7,6 +7,9 @@ import 'package:collective_intelligence_metre/pages/tds.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 
+const PROFILE_INDEX = 0;
+const SURVEYS_INDEX = 1;
+const HEALTH_DATA_INDEX = 2;
 /// This is the stateful widget that the main application instantiates.
 class Home extends StatefulWidget {
   final int defaultIndex;

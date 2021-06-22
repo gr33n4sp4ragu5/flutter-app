@@ -1,4 +1,3 @@
-import 'package:collective_intelligence_metre/constants/constants.dart';
 import 'package:collective_intelligence_metre/util/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:collective_intelligence_metre/pages/home.dart';
