@@ -1,4 +1,5 @@
 import 'package:collective_intelligence_metre/constants/constants.dart';
+import 'package:collective_intelligence_metre/util/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:collective_intelligence_metre/pages/home.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
@@ -32,18 +33,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    const initializationSettingsAndroid =
-    AndroidInitializationSettings('colintmet_logo');
-    final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
-        onDidReceiveLocalNotification:
-        (int id, String title, String body, String payload) async {});
-    final InitializationSettings initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS);
-
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+    initializeNotifications(flutterLocalNotificationsPlugin, selectNotification);
   }
 
   Future selectNotification(String payload) async {

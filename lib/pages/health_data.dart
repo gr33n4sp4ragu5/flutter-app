@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:collective_intelligence_metre/util/notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
@@ -215,29 +215,6 @@ class _HealthDataState extends State<HealthData> {
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
 
-  void scheduleNotification() async {
-    print("Notificacion scheduleada");
-    var scheduledNotificationDateTime = DateTime.now().add(Duration(seconds: 10));
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'alarm_notif',
-      'alarm_notif',
-      'Channel for Alarm notification',
-      icon: 'colintmet_logo',
-      sound: RawResourceAndroidNotificationSound('notification'),
-      largeIcon: DrawableResourceAndroidBitmap('colintmet_logo'),
-    );
-
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails(
-        sound: 'notification.wav',
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true);
-    var platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.schedule(0, 'Colintmet','Por favor accede a la app para enviar tus datos',
-        scheduledNotificationDateTime, platformChannelSpecifics);
-  }
 
   @override
   Widget build(BuildContext context) {
