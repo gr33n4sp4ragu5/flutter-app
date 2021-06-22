@@ -1,0 +1,3 @@
+const PROFILE_INDEX = 0;
+const SURVEYS_INDEX = 1;
+const HEALTH_DATA_INDEX = 2;

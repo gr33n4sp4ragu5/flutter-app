@@ -1,4 +1,4 @@
-import 'package:collective_intelligence_metre/pages/health_data.dart';
+import 'package:collective_intelligence_metre/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:collective_intelligence_metre/pages/home.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
@@ -12,10 +12,9 @@ import 'package:research_package/research_package.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'domain/user.dart';
-import 'pages/linear_survey_page.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
 
 void main() {
   runApp(MyApp());
@@ -27,7 +26,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
+  static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -51,10 +50,7 @@ class _MyAppState extends State<MyApp> {
     if (payload != null) {
       debugPrint('notification payload: $payload');
     }
-    await Navigator.push(
-      context,
-      MaterialPageRoute<void>(builder: (context) => HealthData()),
-    );
+    navigatorKey.currentState.pushNamed("/health");
   }
 
   @override
@@ -67,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
+          navigatorKey: navigatorKey,
           supportedLocales: [
             Locale('en'),
             Locale('es'),
@@ -115,15 +112,15 @@ class _MyAppState extends State<MyApp> {
                       return Login();
                     else
                       UserPreferences().removeUser();
-                    return Home();
+                    return Home(defaultIndex: PROFILE_INDEX);
                 }
               }),
           routes: {
-            '/survey': (context) => LinearSurveyPage(),
+            '/survey': (context) => Home(defaultIndex: SURVEYS_INDEX),
             '/login': (context) => Login(),
             '/register': (context) => Register(),
-            '/home': (context) => Home(),
-            '/health': (context) => HealthData(),
+            '/home': (context) => Home(defaultIndex: PROFILE_INDEX),
+            '/health': (context) => Home(defaultIndex: HEALTH_DATA_INDEX),
           }),
     );
   }

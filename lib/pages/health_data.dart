@@ -217,7 +217,7 @@ class _HealthDataState extends State<HealthData> {
 
   void scheduleNotification() async {
     print("Notificacion scheduleada");
-    var scheduledNotificationDateTime = DateTime.now().add(Duration(seconds: 30));
+    var scheduledNotificationDateTime = DateTime.now().add(Duration(seconds: 10));
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'alarm_notif',
       'alarm_notif',
