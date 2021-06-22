@@ -15,6 +15,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		C789F92E11DA0C1E6B7D1F4E /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 237246BD6D030150446DC920 /* Pods_Runner.framework */; };
 		EB76A52926616607006C7133 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB76A52826616607006C7133 /* HealthKit.framework */; };
+		EB7CFA572681DF090082F37B /* notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = EB7CFA562681DF090082F37B /* notification.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +51,7 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB76A52726616607006C7133 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		EB76A52826616607006C7133 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		EB7CFA562681DF090082F37B /* notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = notification.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				EB7CFA562681DF090082F37B /* notification.wav */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
@@ -197,6 +200,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				EB7CFA572681DF090082F37B /* notification.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
