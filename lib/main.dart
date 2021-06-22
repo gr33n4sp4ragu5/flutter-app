@@ -9,6 +9,7 @@ import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:research_package/research_package.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'domain/user.dart';
 import 'pages/linear_survey_page.dart';
@@ -17,7 +18,43 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  @override
+  void initState() {
+    super.initState();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const initializationSettingsAndroid =
+    AndroidInitializationSettings('colintmet_logo');
+    final IOSInitializationSettings initializationSettingsIOS =
+    IOSInitializationSettings(
+        onDidReceiveLocalNotification:
+        (int id, String title, String body, String payload) async {});
+    final InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
+
+  }
+
+  Future selectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (context) => HealthData()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<User> getUserData() => UserPreferences().getUser();
