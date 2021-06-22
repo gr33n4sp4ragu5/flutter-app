@@ -36,10 +36,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future selectNotification(String payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: $payload');
+    User user = await UserPreferences().getUser();
+    if (user.token == null) {
+      navigatorKey.currentState.pushReplacementNamed("/login");
+    } else {
+      navigatorKey.currentState.pushReplacementNamed("/health");
     }
-    navigatorKey.currentState.pushNamed("/health");
   }
 
   @override
