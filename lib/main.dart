@@ -99,9 +99,14 @@ class _MyAppState extends State<MyApp> {
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token == null)
+                    else if (snapshot.data.token == null) {
+                      scheduleNotification();
                       return Login();
-                    return Home(defaultIndex: PROFILE_INDEX);
+                    }
+                    else {
+                      scheduleNotification();
+                      return Home(defaultIndex: PROFILE_INDEX);
+                    }
                 }
               }),
           routes: {
@@ -114,3 +119,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
