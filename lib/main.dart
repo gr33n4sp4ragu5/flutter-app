@@ -99,8 +99,6 @@ class _MyAppState extends State<MyApp> {
                       return Text('Error: ${snapshot.error}');
                     else if (snapshot.data.token == null)
                       return Login();
-                    else
-                      UserPreferences().removeUser();
                     return Home(defaultIndex: PROFILE_INDEX);
                 }
               }),
