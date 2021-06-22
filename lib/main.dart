@@ -14,6 +14,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'domain/user.dart';
 import 'pages/linear_survey_page.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
 void main() {
   runApp(MyApp());
 }
@@ -24,12 +27,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 
   @override
   void initState() {
     super.initState();
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
     const initializationSettingsAndroid =
     AndroidInitializationSettings('colintmet_logo');
     final IOSInitializationSettings initializationSettingsIOS =
@@ -42,7 +45,6 @@ class _MyAppState extends State<MyApp> {
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: selectNotification);
-
   }
 
   Future selectNotification(String payload) async {

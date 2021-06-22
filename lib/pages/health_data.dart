@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
@@ -7,6 +8,8 @@ import 'package:collective_intelligence_metre/util/app_url.dart';
 import 'package:http/http.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'dart:convert';
+
+import '../main.dart';
 
 class HealthData extends StatefulWidget {
   @override
@@ -212,6 +215,30 @@ class _HealthDataState extends State<HealthData> {
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
 
+  void scheduleNotification() async {
+    print("Notificacion scheduleada");
+    var scheduledNotificationDateTime = DateTime.now().add(Duration(seconds: 30));
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'alarm_notif',
+      'alarm_notif',
+      'Channel for Alarm notification',
+      icon: 'colintmet_logo',
+      sound: RawResourceAndroidNotificationSound('notification'),
+      largeIcon: DrawableResourceAndroidBitmap('colintmet_logo'),
+    );
+
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails(
+        sound: 'notification.wav',
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true);
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.schedule(0, 'Colintmet','Por favor accede a la app para enviar tus datos',
+        scheduledNotificationDateTime, platformChannelSpecifics);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -221,6 +248,12 @@ class _HealthDataState extends State<HealthData> {
                 icon: Icon(Icons.file_upload),
                 onPressed: () {
                   fetchData();
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.notifications_active),
+                onPressed: () {
+                  scheduleNotification();
                 },
               ),
               _content(),]
