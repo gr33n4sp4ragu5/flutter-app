@@ -230,7 +230,7 @@ class _HealthDataState extends State<HealthData> {
               IconButton(
                 icon: Icon(Icons.notifications_active),
                 onPressed: () {
-                  scheduleNotification();
+                  scheduleRecurringNotification();
                 },
               ),
               _content(),]

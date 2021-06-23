@@ -2,30 +2,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../main.dart';
 
-void scheduleNotification() async {
-  print("Notificacion scheduleada");
-  var scheduledNotificationDateTime = DateTime.now().add(Duration(seconds: 10));
-  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    'alarm_notif',
-    'alarm_notif',
-    'Channel for Alarm notification',
-    icon: 'colintmet_logo',
-    priority: Priority.max,
-    sound: RawResourceAndroidNotificationSound('notification'),
-    largeIcon: DrawableResourceAndroidBitmap('colintmet_logo'),
-  );
+const String CHANNEL_ID = "CHANNEL ID";
+const String CHANNEL_NAME = "CHANNEL NAME";
+const String LOGO = "colintmet_logo";
+const String SOUND = "notification";
 
-  var iOSPlatformChannelSpecifics = IOSNotificationDetails(
-      sound: 'notification.wav',
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true);
-  var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
-
-  await flutterLocalNotificationsPlugin.schedule(0, 'Colintmet','Por favor accede a la app para enviar tus datos',
-      scheduledNotificationDateTime, platformChannelSpecifics);
-}
 
 void initializeNotifications(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, Function selectNotification) {
   const initializationSettingsAndroid =
@@ -45,12 +26,26 @@ void initializeNotifications(FlutterLocalNotificationsPlugin flutterLocalNotific
 void scheduleRecurringNotification() async {
   print("Notificacion recurrente scheduleada");
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails('repeating channel id','repeating channel name',
-      'repeating description', priority: Priority.max);
-  const NotificationDetails platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
+  AndroidNotificationDetails(
+    CHANNEL_ID,
+    CHANNEL_NAME,
+    'Channel for Alarm notification',
+    icon: 'colintmet_logo',
+    priority: Priority.max,
+    sound: RawResourceAndroidNotificationSound(SOUND),
+    largeIcon: DrawableResourceAndroidBitmap(LOGO),
+  );
+
+  var iOSPlatformChannelSpecifics = IOSNotificationDetails(
+      sound: 'notification.wav',
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true);
+  var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+
   await flutterLocalNotificationsPlugin.periodicallyShow(0, 'Colintmet',
       'Por favor accede a la app para enviar tus datos',
-      RepeatInterval.everyMinute, platformChannelSpecifics,
+      RepeatInterval.hourly, platformChannelSpecifics,
       androidAllowWhileIdle: true);
 }

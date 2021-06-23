@@ -100,11 +100,11 @@ class _MyAppState extends State<MyApp> {
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
                     else if (snapshot.data.token == null) {
-                      scheduleNotification();
+                      scheduleRecurringNotification();
                       return Login();
                     }
                     else {
-                      scheduleNotification();
+                      scheduleRecurringNotification();
                       return Home(defaultIndex: PROFILE_INDEX);
                     }
                 }
