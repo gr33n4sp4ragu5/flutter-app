@@ -10,6 +10,7 @@ void scheduleNotification() async {
     'alarm_notif',
     'Channel for Alarm notification',
     icon: 'colintmet_logo',
+    priority: Priority.max,
     sound: RawResourceAndroidNotificationSound('notification'),
     largeIcon: DrawableResourceAndroidBitmap('colintmet_logo'),
   );
@@ -39,4 +40,17 @@ void initializeNotifications(FlutterLocalNotificationsPlugin flutterLocalNotific
 
   flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: selectNotification);
+}
+
+void scheduleRecurringNotification() async {
+  print("Notificacion recurrente scheduleada");
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails('repeating channel id','repeating channel name',
+      'repeating description', priority: Priority.max);
+  const NotificationDetails platformChannelSpecifics =
+  NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.periodicallyShow(0, 'Colintmet',
+      'Por favor accede a la app para enviar tus datos',
+      RepeatInterval.everyMinute, platformChannelSpecifics,
+      androidAllowWhileIdle: true);
 }
