@@ -46,6 +46,6 @@ void scheduleRecurringNotification() async {
 
   await flutterLocalNotificationsPlugin.periodicallyShow(0, 'Colintmet',
       'Por favor accede a la app para enviar tus datos',
-      RepeatInterval.hourly, platformChannelSpecifics,
+      RepeatInterval.daily, platformChannelSpecifics,
       androidAllowWhileIdle: true);
 }
