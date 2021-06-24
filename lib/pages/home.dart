@@ -7,9 +7,13 @@ import 'package:collective_intelligence_metre/pages/tds.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 
+const PROFILE_INDEX = 0;
+const SURVEYS_INDEX = 1;
+const HEALTH_DATA_INDEX = 2;
 /// This is the stateful widget that the main application instantiates.
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  final int defaultIndex;
+  const Home({Key key, this.defaultIndex = SURVEYS_INDEX}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -17,7 +21,7 @@ class Home extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
+  int _selectedIndex;
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static  List<Widget> _widgetOptions = <Widget>[
@@ -49,7 +53,7 @@ class _HomeState extends State<Home> {
           },
         )]
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _widgetOptions.elementAt(_selectedIndex ?? widget.defaultIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -69,7 +73,7 @@ class _HomeState extends State<Home> {
           //     label: 'Estadísticas',
           //   ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: _selectedIndex ?? widget.defaultIndex,
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),

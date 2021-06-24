@@ -1,4 +1,4 @@
-import 'package:collective_intelligence_metre/pages/health_data.dart';
+import 'package:collective_intelligence_metre/util/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:collective_intelligence_metre/pages/home.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
@@ -9,15 +9,41 @@ import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:research_package/research_package.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'domain/user.dart';
-import 'pages/linear_survey_page.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    initializeNotifications(flutterLocalNotificationsPlugin, selectNotification);
+  }
+
+  Future selectNotification(String payload) async {
+    User user = await UserPreferences().getUser();
+    if (user.token == null) {
+      navigatorKey.currentState.pushReplacementNamed("/login");
+    } else {
+      navigatorKey.currentState.pushReplacementNamed("/health");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<User> getUserData() => UserPreferences().getUser();
@@ -28,6 +54,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
+          navigatorKey: navigatorKey,
           supportedLocales: [
             Locale('en'),
             Locale('es'),
@@ -72,20 +99,24 @@ class MyApp extends StatelessWidget {
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token == null)
+                    else if (snapshot.data.token == null) {
+                      scheduleRecurringNotification();
                       return Login();
-                    else
-                      UserPreferences().removeUser();
-                    return Home();
+                    }
+                    else {
+                      scheduleRecurringNotification();
+                      return Home(defaultIndex: PROFILE_INDEX);
+                    }
                 }
               }),
           routes: {
-            '/survey': (context) => LinearSurveyPage(),
+            '/survey': (context) => Home(defaultIndex: SURVEYS_INDEX),
             '/login': (context) => Login(),
             '/register': (context) => Register(),
-            '/home': (context) => Home(),
-            '/health': (context) => HealthData(),
+            '/home': (context) => Home(defaultIndex: PROFILE_INDEX),
+            '/health': (context) => Home(defaultIndex: HEALTH_DATA_INDEX),
           }),
     );
   }
 }
+

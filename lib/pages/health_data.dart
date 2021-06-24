@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:collective_intelligence_metre/util/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -221,6 +222,12 @@ class _HealthDataState extends State<HealthData> {
                 icon: Icon(Icons.file_upload),
                 onPressed: () {
                   fetchData();
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.notifications_active),
+                onPressed: () {
+                  scheduleRecurringNotification();
                 },
               ),
               _content(),]
