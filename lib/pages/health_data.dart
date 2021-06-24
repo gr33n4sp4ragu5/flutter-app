@@ -25,6 +25,7 @@ enum AppState {
 class _HealthDataState extends State<HealthData> {
   List<HealthDataPoint> _healthDataList = [];
   AppState _state = AppState.DATA_NOT_FETCHED;
+  DateTime _lastUploaded;
 
   @override
   void initState() {
@@ -44,8 +45,8 @@ class _HealthDataState extends State<HealthData> {
 
     }
     
-    DateTime startDate = DateTime(2021, 05, 20, 0, 0, 0);
-    DateTime endDate = DateTime(2021, 05, 29, 23, 59, 59);
+    DateTime startDate = DateTime(2021, 06, 24, 0, 0, 0);
+    DateTime endDate = DateTime(2021, 06, 25, 23, 59, 59);
 
 
     HealthFactory health = HealthFactory();
@@ -78,8 +79,19 @@ class _HealthDataState extends State<HealthData> {
       /// Filter out duplicates
       _healthDataList = HealthFactory.removeDuplicates(_healthDataList);
 
+      // Filter data previous to what is already in the database
+      String token = await UserPreferences.getToken();
+      final profile_data = await get(AppUrl.getProfileData,
+          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
+          .then(getLastUploadedDate)
+          .catchError(onError);
+
+      List<HealthDataPoint> refined_data_list = _healthDataList.where((data) => data.dateTo.isAfter(_lastUploaded)).toList();
+
+
+
       /// Print the results
-      _healthDataList.forEach((x) {
+      refined_data_list.forEach((x) {
         print("Data point: $x");
         steps += x.value.round();
       });
@@ -87,12 +99,16 @@ class _HealthDataState extends State<HealthData> {
       print("Steps: $steps");
 
       ///Send the results to endpoint
-      sendPhysiologicalData(_healthDataList);
+
+      if(refined_data_list.isNotEmpty) {
+        sendPhysiologicalData(refined_data_list);
+      }
+
 
       /// Update the UI to display the results
       setState(() {
         _state =
-        _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
+        refined_data_list.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
       });
     } else {
       print("Authorization not granted");
@@ -112,6 +128,12 @@ class _HealthDataState extends State<HealthData> {
         Text('Fetching data...')
       ],
     );
+  }
+
+  getLastUploadedDate(Response response) {
+    final Map<String, dynamic> responseData = json.decode(response.body)["profile_data"];
+    setState(() => _lastUploaded = DateTime.parse(responseData["latest_physiological_upload"]));
+    return responseData;
   }
 
   Widget _contentDataReady() {
