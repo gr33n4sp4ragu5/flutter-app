@@ -13,7 +13,7 @@ const HEALTH_DATA_INDEX = 2;
 /// This is the stateful widget that the main application instantiates.
 class Home extends StatefulWidget {
   final int defaultIndex;
-  const Home({Key key, this.defaultIndex = 1}) : super(key: key);
+  const Home({Key key, this.defaultIndex = SURVEYS_INDEX}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();

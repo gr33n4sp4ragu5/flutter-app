@@ -9,8 +9,6 @@ import 'package:http/http.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
 import 'dart:convert';
 
-import '../main.dart';
-
 class HealthData extends StatefulWidget {
   @override
   _HealthDataState createState() => _HealthDataState();
@@ -214,7 +212,6 @@ class _HealthDataState extends State<HealthData> {
     print("the error is $error.detail");
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
-
 
   @override
   Widget build(BuildContext context) {
