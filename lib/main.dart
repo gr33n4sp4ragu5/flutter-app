@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token == null) {
+                    else if (snapshot.data.token == null || snapshot.data.tokenExpiration.isBefore(DateTime.now())) {
                       scheduleRecurringNotification();
                       return Login();
                     }
