@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:collective_intelligence_metre/domain/saved_survey.dart';
 import 'package:collective_intelligence_metre/domain/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -32,4 +35,17 @@ class UserPreferences {
     String token = prefs.getString("token");
     return token;
   }
+}
+
+class SurveyPreferences {
+  Future<void> saveSurvey(SavedSurvey savedSurvey) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(savedSurvey.userEmail + savedSurvey.surveyId, json.encode(savedSurvey));
+  }
+
+  Future<void> removeSavedSurvey(String email, String surveyId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(email + surveyId);
+  }
+
 }
