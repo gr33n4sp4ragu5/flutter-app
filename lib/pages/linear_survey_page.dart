@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:collective_intelligence_metre/domain/saved_survey.dart';
 import 'package:collective_intelligence_metre/util/app_url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:research_package/research_package.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../research_package_objects/linear_survey_objects.dart';
 import 'dart:convert';
 
@@ -63,6 +65,17 @@ class LinearSurveyPage extends StatelessWidget {
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
 
+  void saveResultsAsync([RPTaskResult results]) async {
+    String lastStepAnsweredId = getLastStepAnsweredId(results);
+    String surveyId = getSurveyId(results);
+    String userEmail = await getCurrentUserEmail();
+
+    SavedSurvey savedSurvey = SavedSurvey(results, lastStepAnsweredId, userEmail, surveyId);
+    SurveyPreferences().saveSurvey(savedSurvey);
+    markSurveyAsStarted();
+
+  }
+
 
 @override
   Widget build(BuildContext context) {
@@ -84,10 +97,23 @@ class LinearSurveyPage extends StatelessWidget {
         onSubmit: (result) {
           resultCallback(result);
         },
-        onCancel: ([res]) => print('survey canceled'),
+        onCancel: ([RPTaskResult results]) {
+          saveResultsAsync(results);
+      },
         // No onCancel
         // If there's no onCancel provided the survey just quits
       ),
     );
   }
+}
+
+getCurrentUserEmail() async {
+  String token = await UserPreferences.getToken();
+  print("The token is:");
+  print(token);
+
+  Response response = await get(AppUrl.getProfileData,
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+  final Map<String, dynamic> responseData = json.decode(response.body)["profile_data"];
+  return responseData['email'];
 }
