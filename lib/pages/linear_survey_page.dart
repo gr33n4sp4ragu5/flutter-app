@@ -121,6 +121,25 @@ class LinearSurveyPage extends StatelessWidget {
   }
 }
 
+Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
+  String surveyId = wholeTask.identifier;
+  String userEmail = await getCurrentUserEmail();
+  SavedSurvey survey = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
+  if(survey == null) {
+    return wholeTask;
+  } else {
+    List<RPStep> finalSteps;
+    RPStep lastStepAnswered = wholeTask.getStepWithIdentifier(survey.lastStepAnsweredId);
+    RPStep aux = wholeTask.getStepAfterStep(lastStepAnswered, null);
+    while(aux != null) {
+      finalSteps.add(wholeTask.getStepAfterStep(aux, null));
+      aux = wholeTask.getStepAfterStep(aux, null);
+    }
+    return new RPOrderedTask(surveyId, finalSteps);
+  }
+
+}
+
 getCurrentUserEmail() async {
   String token = await UserPreferences.getToken();
   print("The token is:");
