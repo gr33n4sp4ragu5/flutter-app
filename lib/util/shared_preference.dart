@@ -40,12 +40,25 @@ class UserPreferences {
 class SurveyPreferences {
   Future<void> saveSurvey(SavedSurvey savedSurvey) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(savedSurvey.userEmail + savedSurvey.surveyId, json.encode(savedSurvey));
+    String key = savedSurvey.userEmail +  savedSurvey.surveyId;
+    prefs.setString(key, json.encode(savedSurvey));
   }
 
   Future<void> removeSavedSurvey(String email, String surveyId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(email + surveyId);
+  }
+
+  Future<SavedSurvey> getSavedSurvey(String email, String surveyId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.containsKey(email + surveyId)){
+      String encodedSurvey = prefs.getString(email + surveyId);
+      Map<String, dynamic> decodedSurvey = jsonDecode(encodedSurvey);
+
+      return SavedSurvey.FromJson(decodedSurvey);
+    } else {
+      return null;
+    }
   }
 
 }
