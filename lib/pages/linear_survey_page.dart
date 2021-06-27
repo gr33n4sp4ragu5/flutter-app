@@ -10,34 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../research_package_objects/linear_survey_objects.dart';
 import 'dart:convert';
 
-class LinearSurveyPage extends StatelessWidget {
-  String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
-
-  void resultCallback(RPTaskResult result) {
-    // Do anything with the result
-    send_survey(result);
-    print(_encode(result));
-  }
-
-  void cancelCallBack(RPTaskResult result) {
-    // Do anything with the result at the moment of the cancellation
-    print("The result so far:\n" + _encode(result));
-  }
-
-  Future<Map<String, dynamic>> send_survey(RPTaskResult formatted_result) async {
-
-    final Map<String, dynamic> survey_data = {
-      'survey': formatted_result
-    };
-
-    String token = await UserPreferences.getToken();
-
-    return await post(AppUrl.sendSurveyAnswer,
-        body: json.encode(survey_data),
-        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
-        .then(onValue)
-        .catchError(onError);
-  }
+class LinearSurveyPage extends StatefulWidget {
   static Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
@@ -65,6 +38,39 @@ class LinearSurveyPage extends StatelessWidget {
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
 
+  @override
+  _LinearSurveyPageState createState() => _LinearSurveyPageState();
+}
+
+class _LinearSurveyPageState extends State<LinearSurveyPage> {
+  String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+
+  void resultCallback(RPTaskResult result) {
+    // Do anything with the result
+    send_survey(result);
+    print(_encode(result));
+  }
+
+  void cancelCallBack(RPTaskResult result) {
+    // Do anything with the result at the moment of the cancellation
+    print("The result so far:\n" + _encode(result));
+  }
+
+  Future<Map<String, dynamic>> send_survey(RPTaskResult formatted_result) async {
+
+    final Map<String, dynamic> survey_data = {
+      'survey': formatted_result
+    };
+
+    String token = await UserPreferences.getToken();
+
+    return await post(AppUrl.sendSurveyAnswer,
+        body: json.encode(survey_data),
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
+        .then(LinearSurveyPage.onValue)
+        .catchError(LinearSurveyPage.onError);
+  }
+
   void saveResultsAsync([RPTaskResult results]) async {
     String lastStepAnsweredId = getLastStepAnsweredId(results);
     String surveyId = results.identifier;
@@ -89,7 +95,6 @@ class LinearSurveyPage extends StatelessWidget {
     print("The lastId is: " + lastId);
     return lastId;
   }
-
 
 @override
   Widget build(BuildContext context) {
