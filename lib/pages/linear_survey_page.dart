@@ -43,6 +43,14 @@ class LinearSurveyPage extends StatefulWidget {
 }
 
 class _LinearSurveyPageState extends State<LinearSurveyPage> {
+  Future<RPOrderedTask> futureTask;
+
+  @override
+  void didUpdateWidget(covariant LinearSurveyPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    futureTask = getTaskAsync(linearSurveyTask); //TODO- check if we can do it this way or it makes no sense
+
+  }
   String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
   void resultCallback(RPTaskResult result) {
@@ -96,33 +104,63 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
     return lastId;
   }
 
+  Widget buildSurvey(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    if(snapshot.connectionState == ConnectionState.done) {
+      return Theme(
+        data: isDarkMode
+        // Dark mode
+            ? ThemeData.dark()
+        // Your styling
+            : ThemeData(
+          primaryColor: Colors.red,
+          accentColor: Colors.green,
+          backgroundColor: Colors.white,
+          dividerColor: Colors.grey,
+          textTheme: Typography.blackMountainView,
+        ),
+        child: RPUITask(
+          task: snapshot.data,
+          onSubmit: (result) {
+            resultCallback(result);
+          },
+          onCancel: ([RPTaskResult results]) {
+            saveResultsAsync(results);
+          },
+          // No onCancel
+          // If there's no onCancel provided the survey just quits
+        ),
+      );
+    } else  if (snapshot.connectionState == ConnectionState.waiting){
+
+      return Theme(
+        data: isDarkMode
+        // Dark mode
+            ? ThemeData.dark()
+        // Your styling
+            : ThemeData(
+          primaryColor: Colors.red,
+          accentColor: Colors.green,
+          backgroundColor: Colors.white,
+          dividerColor: Colors.grey,
+          textTheme: Typography.blackMountainView,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Text(" Datos")
+          ],
+        ),
+      );
+    } else return Text(snapshot.connectionState.toString());
+
+  }
+
 @override
   Widget build(BuildContext context) {
-    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-    return Theme(
-      data: isDarkMode
-          // Dark mode
-          ? ThemeData.dark()
-          // Your styling
-          : ThemeData(
-              primaryColor: Colors.red,
-              accentColor: Colors.green,
-              backgroundColor: Colors.white,
-              dividerColor: Colors.grey,
-              textTheme: Typography.blackMountainView,
-            ),
-      child: RPUITask(
-        task: linearSurveyTask,
-        onSubmit: (result) {
-          resultCallback(result);
-        },
-        onCancel: ([RPTaskResult results]) {
-          saveResultsAsync(results);
-      },
-        // No onCancel
-        // If there's no onCancel provided the survey just quits
-      ),
-    );
+
+    return FutureBuilder(future: getTaskAsync(linearSurveyTask), builder: buildSurvey);
   }
 }
 
@@ -133,13 +171,17 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
   if(survey == null) {
     return wholeTask;
   } else {
-    List<RPStep> finalSteps;
+    print("survey found for this user and survey ID");
+    print(survey.lastStepAnsweredId);
+    List<RPStep> finalSteps = [];
     RPStep lastStepAnswered = wholeTask.getStepWithIdentifier(survey.lastStepAnsweredId);
     RPStep aux = wholeTask.getStepAfterStep(lastStepAnswered, null);
     while(aux != null) {
       finalSteps.add(wholeTask.getStepAfterStep(aux, null));
       aux = wholeTask.getStepAfterStep(aux, null);
     }
+    print("Returning this");
+    print(new RPOrderedTask(surveyId, finalSteps));
     return new RPOrderedTask(surveyId, finalSteps);
   }
 
