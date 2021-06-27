@@ -6,7 +6,7 @@ enum SurveyState {
 }
 
 class CIMSurvey {
-  StatelessWidget surveyPage;
+  Widget surveyPage;
   SurveyState state;
   String nextQuestionStep; //Field which indicates the next step id when the survey is saved without being submitted
   String surveyId;
