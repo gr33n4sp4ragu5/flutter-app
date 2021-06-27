@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:research_package/model.dart';
 
 class SavedSurvey{
@@ -10,11 +12,14 @@ String surveyId; // Which survey we are saving.
 SavedSurvey(this.rawResults, this.lastStepAnsweredId, this.userEmail, this.surveyId);
 
 //TODO- expirationDate when we will delete this survey (Not a priority)
-  SavedSurvey.FromJson(Map<String, dynamic> json)
-      : rawResults = json['rawResults'],
-        lastStepAnsweredId = json['lastStepAnsweredId'],
-        userEmail = json['userEmail'],
-        surveyId = json['surveyId'];
+  SavedSurvey.FromJson(Map<String, dynamic> json){
+    lastStepAnsweredId = json['lastStepAnsweredId'];
+    userEmail = json['userEmail'];
+    surveyId = json['surveyId'];
+    rawResults = RPTaskResult.fromJson(json['rawResults']);
+    SavedSurvey(rawResults, lastStepAnsweredId, userEmail, surveyId);
+  }
+
 
   Map<String, dynamic> toJson() {
     return {
