@@ -67,13 +67,27 @@ class LinearSurveyPage extends StatelessWidget {
 
   void saveResultsAsync([RPTaskResult results]) async {
     String lastStepAnsweredId = getLastStepAnsweredId(results);
-    String surveyId = getSurveyId(results);
+    String surveyId = results.identifier;
     String userEmail = await getCurrentUserEmail();
 
     SavedSurvey savedSurvey = SavedSurvey(results, lastStepAnsweredId, userEmail, surveyId);
     SurveyPreferences().saveSurvey(savedSurvey);
-    markSurveyAsStarted();
+    //markSurveyAsStarted();
 
+  }
+
+  String getLastStepAnsweredId(RPTaskResult result) {
+    DateTime latest = DateTime(1900);
+    String lastId;
+    Map<String, RPResult> answers = result.results;
+    answers.forEach((key, value) {
+      if(value.startDate.isAfter(latest)) {
+        latest = value.startDate;
+        lastId = key;
+      }
+    });
+    print("The lastId is: " + lastId);
+    return lastId;
   }
 
 
