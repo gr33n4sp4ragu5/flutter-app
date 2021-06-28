@@ -53,10 +53,20 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
   }
   String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
-  void resultCallback(RPTaskResult result) {
+  void resultCallback(RPTaskResult results) async {
+    print("going to the result callback");
+    String lastStepAnsweredId = getLastStepAnsweredId(results);
+    String surveyId = results.identifier;
+    String userEmail = await getCurrentUserEmail();
+
+    SavedSurvey savedSurvey = SavedSurvey(results, lastStepAnsweredId, userEmail, surveyId);
+    await SurveyPreferences().saveSurvey(savedSurvey);
+    SavedSurvey finalResult = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
+
+
     // Do anything with the result
-    send_survey(result);
-    print(_encode(result));
+    send_survey(finalResult.rawResults);
+    print(_encode(finalResult.rawResults));
   }
 
   void cancelCallBack(RPTaskResult result) {
@@ -168,7 +178,26 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
   String surveyId = wholeTask.identifier;
   String userEmail = await getCurrentUserEmail();
   SavedSurvey survey = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
+  String token = await UserPreferences.getToken();
   if(survey == null) {
+    print("estoy aqui");
+    Map<String, dynamic> data = {
+      "RPOrderedTask": wholeTask
+    };
+    print("estoy aqui2");
+
+    try {
+
+      post(AppUrl.testendpoint,
+          body: jsonEncode(data),
+          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+
+    } catch(error) {
+      print("Se rompio");
+      print(error);
+    }
+
+    print("estoy aqui3");
     return wholeTask;
   } else {
     print("survey found for this user and survey ID");
@@ -182,6 +211,12 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
     }
     print("Returning this");
     print(new RPOrderedTask(surveyId, finalSteps));
+/*
+    await post(AppUrl.sendPhysiologicalData,
+        body: jsonEncode(new RPOrderedTask(surveyId, finalSteps)),
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+
+ */
     return new RPOrderedTask(surveyId, finalSteps);
   }
 
