@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:collective_intelligence_metre/domain/saved_survey.dart';
 import 'package:collective_intelligence_metre/domain/user.dart';
+import 'package:research_package/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
@@ -39,9 +40,11 @@ class UserPreferences {
 
 class SurveyPreferences {
   Future<void> saveSurvey(SavedSurvey savedSurvey) async {
+    SavedSurvey previouslySavedSurvey = await getSavedSurvey(savedSurvey.userEmail, savedSurvey.surveyId);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String key = savedSurvey.userEmail +  savedSurvey.surveyId;
-    prefs.setString(key, json.encode(savedSurvey));
+    SavedSurvey mergedResult = mergeSurveys(previouslySavedSurvey, savedSurvey);
+    prefs.setString(key, json.encode(mergedResult));
   }
 
   Future<void> removeSavedSurvey(String email, String surveyId) async {
@@ -59,6 +62,30 @@ class SurveyPreferences {
     } else {
       return null;
     }
+  }
+
+  static mergeSurveys(SavedSurvey prev, SavedSurvey current) {
+    if(prev == null) {
+      print("Es la primera vez");
+      return current;
+    }
+    print("A mergear");
+    RPTaskResult prevResults = prev.rawResults;
+    RPTaskResult currentResults = current.rawResults;
+
+    RPTaskResult merged = new RPTaskResult();
+    merged.results = Map<String, RPResult>();
+    Map<String, dynamic> prevSteps = prevResults.results;
+    Map<String, dynamic> currentSteps = prevResults.results;
+    prevSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
+    currentSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
+    merged.startDate = prevResults.startDate;
+    merged.endDate = currentResults.endDate;
+    print("La survey");
+    print(SavedSurvey(merged, current.lastStepAnsweredId, current.userEmail, current.surveyId));
+
+    return new SavedSurvey(merged, current.lastStepAnsweredId, current.userEmail, current.surveyId);
+
   }
 
 }
