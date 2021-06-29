@@ -167,79 +167,35 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
   }
 }
 
-Map<String, dynamic> rPOrderedTaskToJson(RPOrderedTask instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('identifier', instance.identifier);
-  writeNotNull('close_after_finished', instance.closeAfterFinished);
-
-  List<RPStep> steps = instance.steps;
-  StringBuffer concatenatedSteps = new StringBuffer();
-  for(int i = 0; i < steps.length; i++) {
-    var jsonStep = RPStepToJson(steps[i]);
-    String aux = jsonEncode(jsonStep);
-    concatenatedSteps.write(aux);
-  }
-  String resul = concatenatedSteps.toString();
-  writeNotNull('steps', resul);
-
-  return val;
-}
-
-Map<String, dynamic> RPStepToJson(RPStep instance) {
-  final val = <String, dynamic>{};
-if(instance == null) return val;
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('identifier', instance.identifier);
-  writeNotNull('title', instance.title);
-  writeNotNull('text', instance.text);
-  writeNotNull('optional', instance.optional);
-  return val;
-}
 
 Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
   if(wholeTask == null){
     print("the whole task is null");
-    return linearSurveyTask;
+    throw Exception("The RPOrderedTask passed is null");
   }
   String surveyId = wholeTask.identifier;
   String userEmail = await getCurrentUserEmail();
   SavedSurvey survey = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
-  String token = await UserPreferences.getToken();
-  if(survey == null) {
 
-    if(wholeTask == null) throw Exception("wholetask es null");
+  if(survey == null) {
     return wholeTask;
   } else {
     print("survey found for this user and survey ID");
-    print(survey.lastStepAnsweredId);// a veces esta vacio
+    print(survey.lastStepAnsweredId);
     List<RPStep> finalSteps = [];
-    RPStep lastStepAnswered = wholeTask.getStepWithIdentifier(survey.lastStepAnsweredId);// si esta vacio pues devuelve null
-    RPStep aux = wholeTask.getStepAfterStep(lastStepAnswered, null);// cuando es null devuelve el primero
+    RPStep lastStepAnswered = wholeTask.getStepWithIdentifier(survey.lastStepAnsweredId);
+    RPStep aux = wholeTask.getStepAfterStep(lastStepAnswered, null);
     while(aux != null) {
-      print("A ver cuantos pasos me metes");
-      print(aux.identifier);
       finalSteps.add(aux);
       aux = wholeTask.getStepAfterStep(aux, null);
     }
     print("Returning this");
     print(new RPOrderedTask(surveyId, finalSteps));
 
-    RPOrderedTask resultadito = new RPOrderedTask(surveyId, finalSteps);
-    if(resultadito == null) throw Exception("resultadito es null");
+    RPOrderedTask finalTask = new RPOrderedTask(surveyId, finalSteps);
+    if(finalTask == null) throw Exception("finalTask es null");
 
-    return resultadito;
+    return finalTask;
   }
 
 }
