@@ -80,11 +80,13 @@ class SurveyPreferences {
      */
 
     RPTaskResult merged = new RPTaskResult();
-    merged.results = Map<String, RPResult>();
+    Map<String, dynamic> resultadosMerged;
+    resultadosMerged = Map<String, RPResult>();
+    merged.results = resultadosMerged;
     Map<String, dynamic> prevSteps = prevResults.results;
     Map<String, dynamic> currentSteps = currentResults.results;
 
-    prevSteps.forEach((stepId, stepValue) {merged.setStepResultForIdentifier(stepId, stepValue);});
+    prevSteps.forEach((stepId, stepValue) {merged.setStepResultForIdentifier(stepId, RPStepResult.fromJson(stepValue));});
     currentSteps.forEach((stepId, stepValue) {merged.setStepResultForIdentifier(stepId, stepValue);});
     merged.startDate = prevResults.startDate;
     merged.endDate = currentResults.endDate;
