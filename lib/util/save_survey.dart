@@ -78,17 +78,21 @@ void resultCallback(RPTaskResult results) async {
   SavedSurvey finalResult = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
 
   try{
-    var response = await send_survey(finalResult.rawResults);
-    if(response['status'] == true) {
-      await SurveyPreferences().removeSavedSurvey(userEmail, surveyId);
-      print("Removed the survey");
-    }
+    await sendAndRemoveSurvey(finalResult, userEmail, surveyId);
   } catch(error) {
     print(error);
     print("Error sending survey, retrying...");
-    await send_survey(finalResult.rawResults);
+    await sendAndRemoveSurvey(finalResult, userEmail, surveyId);
   }
 
+}
+
+Future sendAndRemoveSurvey(SavedSurvey finalResult, String userEmail, String surveyId) async {
+  var response = await send_survey(finalResult.rawResults);
+  if(response['status'] == true) {
+    await SurveyPreferences().removeSavedSurvey(userEmail, surveyId);
+    print("Removed the saved survey");
+  }
 }
 
 Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
