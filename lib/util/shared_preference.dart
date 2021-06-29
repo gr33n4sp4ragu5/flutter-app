@@ -72,17 +72,25 @@ class SurveyPreferences {
     print("A mergear");
     RPTaskResult prevResults = prev.rawResults;
     RPTaskResult currentResults = current.rawResults;
+    /*
+    -    Map<String, dynamic> currentSteps = prevResults.results;
+-    prevSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
+-    currentSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
+
+     */
 
     RPTaskResult merged = new RPTaskResult();
     merged.results = Map<String, RPResult>();
     Map<String, dynamic> prevSteps = prevResults.results;
-    Map<String, dynamic> currentSteps = prevResults.results;
-    prevSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
-    currentSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
+    Map<String, dynamic> currentSteps = currentResults.results;
+
+    prevSteps.forEach((stepId, stepValue) {merged.setStepResultForIdentifier(stepId, stepValue);});
+    currentSteps.forEach((stepId, stepValue) {merged.setStepResultForIdentifier(stepId, stepValue);});
     merged.startDate = prevResults.startDate;
     merged.endDate = currentResults.endDate;
-    print("La survey");
+    print("La survey ya mergeada super guapa");
     print(SavedSurvey(merged, current.lastStepAnsweredId, current.userEmail, current.surveyId));
+    print(jsonEncode(merged.toJson()));
 
     return new SavedSurvey(merged, current.lastStepAnsweredId, current.userEmail, current.surveyId);
 
