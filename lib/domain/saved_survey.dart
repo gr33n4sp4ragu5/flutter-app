@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:research_package/model.dart';
 
 class SavedSurvey{
