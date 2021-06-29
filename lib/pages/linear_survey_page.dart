@@ -87,7 +87,7 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
     String myBody = json.encode(survey_data);
     print("Todo bien antes de mandarlo");
 
-    return await post(AppUrl.testendpoint,
+    return await post(AppUrl.sendSurveyAnswer,
         body: myBody,
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
         .then(LinearSurveyPage.onValue);
