@@ -84,6 +84,7 @@ class SurveyPreferences {
     currentSteps.forEach((stepId, stepValue) {merged.setStepResultForIdentifier(stepId, stepValue);});
     merged.startDate = prevResults.startDate;
     merged.endDate = currentResults.endDate;
+    merged.identifier = current.surveyId;
     print("La survey ya mergeada super guapa");
     print(SavedSurvey(merged, current.lastStepAnsweredId, current.userEmail, current.surveyId));
     print(jsonEncode(merged.toJson()));
