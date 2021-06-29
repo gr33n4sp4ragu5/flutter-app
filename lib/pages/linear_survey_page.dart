@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:research_package/research_package.dart';
 import 'package:collective_intelligence_metre/util/shared_preference.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../research_package_objects/linear_survey_objects.dart';
 import 'dart:convert';
 
@@ -43,18 +42,9 @@ class LinearSurveyPage extends StatefulWidget {
 }
 
 class _LinearSurveyPageState extends State<LinearSurveyPage> {
- // Future<RPOrderedTask> futureTask;
 
-  @override
-  void didUpdateWidget(covariant LinearSurveyPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    //futureTask = getTaskAsync(linearSurveyTask); //TODO- check if we can do it this way or it makes no sense
-
-  }
-  String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
   void resultCallback(RPTaskResult results) async {
-    print("going to the result callback");
     String lastStepAnsweredId = getLastStepAnsweredId(results);
     String surveyId = results.identifier;
     String userEmail = await getCurrentUserEmail();
@@ -63,19 +53,15 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
     await SurveyPreferences().saveSurvey(savedSurvey);
     SavedSurvey finalResult = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
 
-
-    // Do anything with the result
     try{
       await send_survey(finalResult.rawResults);
     } catch(error) {
-      print("Pillo aqui el error");
-      await send_survey(finalResult.rawResults);
       print(error);
+      print("Error sending survey, retrying...");
+      await send_survey(finalResult.rawResults);
     }
 
-    //print(_encode(finalResult.rawResults));
   }
-
 
    send_survey(RPTaskResult formatted_result) async {
 
@@ -85,7 +71,6 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
 
     String token = await UserPreferences.getToken();
     String myBody = json.encode(survey_data);
-    print("Todo bien antes de mandarlo");
 
     return await post(AppUrl.sendSurveyAnswer,
         body: myBody,
@@ -94,7 +79,7 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
   }
 
   void saveResultsAsync([RPTaskResult results]) async {
-    print("Guardando los results");
+    print("Saving survey");
     String lastStepAnsweredId = getLastStepAnsweredId(results);
     String surveyId = results.identifier;
     String userEmail = await getCurrentUserEmail();
@@ -124,7 +109,7 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
     if(snapshot.hasError){
       print("The error in snapshot is");
       print(snapshot.error);
-      return Text("No hay data en la respuesta");
+      return Text("Se ha producido un error.");
 
     } else if(snapshot.connectionState == ConnectionState.done) {
       return Theme(
@@ -140,15 +125,13 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
           textTheme: Typography.blackMountainView,
         ),
         child: RPUITask(
-          task: snapshot.data,// Esto es null. Esto es lo que recogemos del future builder. Que coño pasa
+          task: snapshot.data,
           onSubmit: (result) {
             resultCallback(result);
           },
           onCancel: ([RPTaskResult results]) {
             saveResultsAsync(results);
           },
-          // No onCancel
-          // If there's no onCancel provided the survey just quits
         ),
       );
     } else  if (snapshot.connectionState == ConnectionState.waiting){
@@ -206,7 +189,6 @@ Map<String, dynamic> rPOrderedTaskToJson(RPOrderedTask instance) {
   String resul = concatenatedSteps.toString();
   writeNotNull('steps', resul);
 
-
   return val;
 }
 
@@ -225,48 +207,6 @@ if(instance == null) return val;
   writeNotNull('optional', instance.optional);
   return val;
 }
-/*
-Map<String, dynamic> _$RPInstructionStepToJson(RPInstructionStep instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  //writeNotNull(r'$type', instance.$type);
-  writeNotNull('identifier', instance.identifier);
-  writeNotNull('title', instance.title);
-  writeNotNull('text', instance.text);
-  writeNotNull('optional', instance.optional);
-  writeNotNull('detail_text', instance.detailText);
-  writeNotNull('footnote', instance.footnote);
-  writeNotNull('image_path', instance.imagePath);
-  return val;
-}
-
-Map<String, dynamic> _$RPQuestionStepToJson(RPQuestionStep instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  //writeNotNull(r'$type', instance.$type);
-  writeNotNull('identifier', instance.identifier);
-  writeNotNull('title', instance.title);
-  writeNotNull('text', instance.text);
-  writeNotNull('optional', instance.optional);
-  writeNotNull('answer_format', instance.answerFormat);
-  writeNotNull('placeholder', instance.placeholder);
-  return val;
-}
-*/
-
-
 
 Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
   if(wholeTask == null){
@@ -278,24 +218,7 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
   SavedSurvey survey = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
   String token = await UserPreferences.getToken();
   if(survey == null) {
-    print("estoy aqui");
-    Map<String, dynamic> data = {
-      "RPOrderedTask": rPOrderedTaskToJson(wholeTask)
-    };
-    print("estoy aqui2");
 
-    try {
-
-      post(AppUrl.testendpoint,
-          body: jsonEncode(data),
-          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
-
-    } catch(error) {
-      print("Se rompio");
-      print(error);
-    }
-
-    print("estoy aqui3");
     if(wholeTask == null) throw Exception("wholetask es null");
     return wholeTask;
   } else {
@@ -312,30 +235,7 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
     }
     print("Returning this");
     print(new RPOrderedTask(surveyId, finalSteps));
-    RPOrderedTask theTask = new RPOrderedTask(surveyId, finalSteps);
 
-
-
-   // try {
-      Map<String, dynamic> theData = {
-        "RPOrderedTask": rPOrderedTaskToJson(theTask)
-      };
-
-      print("Ya se codifico");
-
-      post(AppUrl.testendpoint,
-          body: jsonEncode(theData),
-          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
-/*
-    } catch(error) {
-      print("Se rompio");
-      print(error);
-    }
-
- */
-
-
-    print("Data sent");
     RPOrderedTask resultadito = new RPOrderedTask(surveyId, finalSteps);
     if(resultadito == null) throw Exception("resultadito es null");
 
