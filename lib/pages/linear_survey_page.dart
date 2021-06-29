@@ -43,12 +43,12 @@ class LinearSurveyPage extends StatefulWidget {
 }
 
 class _LinearSurveyPageState extends State<LinearSurveyPage> {
-  Future<RPOrderedTask> futureTask;
+ // Future<RPOrderedTask> futureTask;
 
   @override
   void didUpdateWidget(covariant LinearSurveyPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    futureTask = getTaskAsync(linearSurveyTask); //TODO- check if we can do it this way or it makes no sense
+    //futureTask = getTaskAsync(linearSurveyTask); //TODO- check if we can do it this way or it makes no sense
 
   }
   String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
@@ -69,10 +69,6 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
     print(_encode(finalResult.rawResults));
   }
 
-  void cancelCallBack(RPTaskResult result) {
-    // Do anything with the result at the moment of the cancellation
-    print("The result so far:\n" + _encode(result));
-  }
 
   Future<Map<String, dynamic>> send_survey(RPTaskResult formatted_result) async {
 
@@ -90,12 +86,13 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
   }
 
   void saveResultsAsync([RPTaskResult results]) async {
+    print("Guardando los results");
     String lastStepAnsweredId = getLastStepAnsweredId(results);
     String surveyId = results.identifier;
     String userEmail = await getCurrentUserEmail();
 
     SavedSurvey savedSurvey = SavedSurvey(results, lastStepAnsweredId, userEmail, surveyId);
-    SurveyPreferences().saveSurvey(savedSurvey);
+    await SurveyPreferences().saveSurvey(savedSurvey);
     //markSurveyAsStarted();
 
   }
@@ -116,7 +113,12 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
 
   Widget buildSurvey(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
     bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-    if(snapshot.connectionState == ConnectionState.done) {
+    if(snapshot.hasError){
+      print("The error in snapshot is");
+      print(snapshot.error);
+      return Text("No hay data en la respuesta");
+
+    } else if(snapshot.connectionState == ConnectionState.done) {
       return Theme(
         data: isDarkMode
         // Dark mode
@@ -130,7 +132,7 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
           textTheme: Typography.blackMountainView,
         ),
         child: RPUITask(
-          task: snapshot.data,
+          task: snapshot.data,// Esto es null. Esto es lo que recogemos del future builder. Que coño pasa
           onSubmit: (result) {
             resultCallback(result);
           },
@@ -174,7 +176,95 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
   }
 }
 
+Map<String, dynamic> rPOrderedTaskToJson(RPOrderedTask instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('identifier', instance.identifier);
+  writeNotNull('close_after_finished', instance.closeAfterFinished);
+
+  List<RPStep> steps = instance.steps;
+  StringBuffer concatenatedSteps = new StringBuffer();
+  for(int i = 0; i < steps.length; i++) {
+    var jsonStep = RPStepToJson(steps[i]);
+    String aux = jsonEncode(jsonStep);
+    concatenatedSteps.write(aux);
+  }
+  String resul = concatenatedSteps.toString();
+  writeNotNull('steps', resul);
+
+
+  return val;
+}
+
+Map<String, dynamic> RPStepToJson(RPStep instance) {
+  final val = <String, dynamic>{};
+if(instance == null) return val;
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('identifier', instance.identifier);
+  writeNotNull('title', instance.title);
+  writeNotNull('text', instance.text);
+  writeNotNull('optional', instance.optional);
+  return val;
+}
+/*
+Map<String, dynamic> _$RPInstructionStepToJson(RPInstructionStep instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  //writeNotNull(r'$type', instance.$type);
+  writeNotNull('identifier', instance.identifier);
+  writeNotNull('title', instance.title);
+  writeNotNull('text', instance.text);
+  writeNotNull('optional', instance.optional);
+  writeNotNull('detail_text', instance.detailText);
+  writeNotNull('footnote', instance.footnote);
+  writeNotNull('image_path', instance.imagePath);
+  return val;
+}
+
+Map<String, dynamic> _$RPQuestionStepToJson(RPQuestionStep instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  //writeNotNull(r'$type', instance.$type);
+  writeNotNull('identifier', instance.identifier);
+  writeNotNull('title', instance.title);
+  writeNotNull('text', instance.text);
+  writeNotNull('optional', instance.optional);
+  writeNotNull('answer_format', instance.answerFormat);
+  writeNotNull('placeholder', instance.placeholder);
+  return val;
+}
+*/
+
+
+
 Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
+  if(wholeTask == null){
+    print("the whole task is null");
+    return linearSurveyTask;
+  }
   String surveyId = wholeTask.identifier;
   String userEmail = await getCurrentUserEmail();
   SavedSurvey survey = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
@@ -182,7 +272,7 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
   if(survey == null) {
     print("estoy aqui");
     Map<String, dynamic> data = {
-      "RPOrderedTask": wholeTask
+      "RPOrderedTask": rPOrderedTaskToJson(wholeTask)
     };
     print("estoy aqui2");
 
@@ -198,6 +288,7 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
     }
 
     print("estoy aqui3");
+    if(wholeTask == null) throw Exception("wholetask es null");
     return wholeTask;
   } else {
     print("survey found for this user and survey ID");
@@ -211,13 +302,34 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
     }
     print("Returning this");
     print(new RPOrderedTask(surveyId, finalSteps));
+    RPOrderedTask theTask = new RPOrderedTask(surveyId, finalSteps);
+
+
+
+   // try {
+      Map<String, dynamic> theData = {
+        "RPOrderedTask": rPOrderedTaskToJson(theTask)
+      };
+
+      print("Ya se codifico");
+
+      post(AppUrl.testendpoint,
+          body: jsonEncode(theData),
+          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
 /*
-    await post(AppUrl.sendPhysiologicalData,
-        body: jsonEncode(new RPOrderedTask(surveyId, finalSteps)),
-        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    } catch(error) {
+      print("Se rompio");
+      print(error);
+    }
 
  */
-    return new RPOrderedTask(surveyId, finalSteps);
+
+
+    print("Data sent");
+    RPOrderedTask resultadito = new RPOrderedTask(surveyId, finalSteps);
+    if(resultadito == null) throw Exception("resultadito es null");
+
+    return resultadito;
   }
 
 }
