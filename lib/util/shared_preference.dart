@@ -72,12 +72,6 @@ class SurveyPreferences {
     print("A mergear");
     RPTaskResult prevResults = prev.rawResults;
     RPTaskResult currentResults = current.rawResults;
-    /*
-    -    Map<String, dynamic> currentSteps = prevResults.results;
--    prevSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
--    currentSteps.forEach((key, value) {merged.setStepResultForIdentifier(key, RPStepResult.fromJson(value));});
-
-     */
 
     RPTaskResult merged = new RPTaskResult();
     Map<String, dynamic> resultadosMerged;
