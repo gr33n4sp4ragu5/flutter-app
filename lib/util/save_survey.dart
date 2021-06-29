@@ -51,25 +51,21 @@ send_survey(RPTaskResult formatted_result) async {
 }
 
 Future<FutureOr> onValue(Response response) async {
-var result;
-final Map<String, dynamic> responseData = json.decode(response.body);
+  var result;
+  final Map<String, dynamic> responseData = json.decode(response.body);
 
-print(response.statusCode);
-if (response.statusCode == 201) {
+  print(response.statusCode);
+  if (response.statusCode == 201) {
+    result = {'status': true, 'message': 'Survey answer successfully sent'};
+  } else {
+    result = {
+      'status': false,
+      'message': 'Failed to send the answer of the survey',
+      'data': responseData
+    };
+  }
 
-result = {
-'status': true,
-'message': 'Survey answer successfully sent'
-};
-} else {
-result = {
-'status': false,
-'message': 'Failed to send the answer of the survey',
-'data': responseData
-};
-}
-
-return result;
+  return result;
 }
 
 void resultCallback(RPTaskResult results) async {
@@ -82,7 +78,11 @@ void resultCallback(RPTaskResult results) async {
   SavedSurvey finalResult = await SurveyPreferences().getSavedSurvey(userEmail, surveyId);
 
   try{
-    await send_survey(finalResult.rawResults);
+    var response = await send_survey(finalResult.rawResults);
+    if(response['status'] == true) {
+      await SurveyPreferences().removeSavedSurvey(userEmail, surveyId);
+      print("Removed the survey");
+    }
   } catch(error) {
     print(error);
     print("Error sending survey, retrying...");
