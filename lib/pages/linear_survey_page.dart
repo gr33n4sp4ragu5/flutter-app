@@ -34,8 +34,8 @@ class LinearSurveyPage extends StatefulWidget {
   }
 
   static onError(error) {
-    print("the error is $error.detail");
-    return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
+    print("the error is $error.detail, $error");
+    throw Exception("please retry");
   }
 
   @override
@@ -65,24 +65,32 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
 
 
     // Do anything with the result
-    send_survey(finalResult.rawResults);
-    print(_encode(finalResult.rawResults));
+    try{
+      await send_survey(finalResult.rawResults);
+    } catch(error) {
+      print("Pillo aqui el error");
+      await send_survey(finalResult.rawResults);
+      print(error);
+    }
+
+    //print(_encode(finalResult.rawResults));
   }
 
 
-  Future<Map<String, dynamic>> send_survey(RPTaskResult formatted_result) async {
+   send_survey(RPTaskResult formatted_result) async {
 
     final Map<String, dynamic> survey_data = {
       'survey': formatted_result
     };
 
     String token = await UserPreferences.getToken();
+    String myBody = json.encode(survey_data);
+    print("Todo bien antes de mandarlo");
 
-    return await post(AppUrl.sendSurveyAnswer,
-        body: json.encode(survey_data),
+    return await post(AppUrl.testendpoint,
+        body: myBody,
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
-        .then(LinearSurveyPage.onValue)
-        .catchError(LinearSurveyPage.onError);
+        .then(LinearSurveyPage.onValue);
   }
 
   void saveResultsAsync([RPTaskResult results]) async {
@@ -99,7 +107,7 @@ class _LinearSurveyPageState extends State<LinearSurveyPage> {
 
   String getLastStepAnsweredId(RPTaskResult result) {
     DateTime latest = DateTime(1900);
-    String lastId;
+    String lastId = "";
     Map<String, RPResult> answers = result.results;
     answers.forEach((key, value) {
       if(value.startDate.isAfter(latest)) {
@@ -292,12 +300,14 @@ Future<RPOrderedTask> getTaskAsync(RPOrderedTask wholeTask) async {
     return wholeTask;
   } else {
     print("survey found for this user and survey ID");
-    print(survey.lastStepAnsweredId);
+    print(survey.lastStepAnsweredId);// a veces esta vacio
     List<RPStep> finalSteps = [];
-    RPStep lastStepAnswered = wholeTask.getStepWithIdentifier(survey.lastStepAnsweredId);
-    RPStep aux = wholeTask.getStepAfterStep(lastStepAnswered, null);
+    RPStep lastStepAnswered = wholeTask.getStepWithIdentifier(survey.lastStepAnsweredId);// si esta vacio pues devuelve null
+    RPStep aux = wholeTask.getStepAfterStep(lastStepAnswered, null);// cuando es null devuelve el primero
     while(aux != null) {
-      finalSteps.add(wholeTask.getStepAfterStep(aux, null));
+      print("A ver cuantos pasos me metes");
+      print(aux.identifier);
+      finalSteps.add(aux);
       aux = wholeTask.getStepAfterStep(aux, null);
     }
     print("Returning this");
