@@ -44,9 +44,15 @@ class _HealthDataState extends State<HealthData> {
       print(statuses[Permission.sensors]);
 
     }
+
+    String token = await UserPreferences.getToken();
+    await get(AppUrl.getProfileData,
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
+        .then(getLastUploadedDate)
+        .catchError(onError);
     
-    DateTime startDate = DateTime(2021, 06, 24, 0, 0, 0);
-    DateTime endDate = DateTime(2021, 06, 25, 23, 59, 59);
+    DateTime startDate = _lastUploaded;
+    DateTime endDate = DateTime.now();
 
 
     HealthFactory health = HealthFactory();
@@ -80,12 +86,6 @@ class _HealthDataState extends State<HealthData> {
       _healthDataList = HealthFactory.removeDuplicates(_healthDataList);
 
       // Filter data previous to what is already in the database
-      String token = await UserPreferences.getToken();
-      final profile_data = await get(AppUrl.getProfileData,
-          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
-          .then(getLastUploadedDate)
-          .catchError(onError);
-
       List<HealthDataPoint> refined_data_list = _healthDataList.where((data) => data.dateTo.isAfter(_lastUploaded)).toList();
 
 
