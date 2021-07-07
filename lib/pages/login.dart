@@ -105,7 +105,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 20.0),
                 auth.loggedInStatus == Status.Authenticating
                     ? loading
-                    : longButtons("Login", doLogin),
+                    : longButtons("Login", doLogin, icon: Icon(Icons.login)),
                 SizedBox(height: 5.0),
                 signUpLabel
               ],

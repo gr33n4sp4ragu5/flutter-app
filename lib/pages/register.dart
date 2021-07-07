@@ -257,7 +257,7 @@ class _RegisterState extends State<Register> {
                   otherRadioButton,
                   auth.loggedInStatus == Status.Authenticating
                       ? loading
-                      : longButtons("Registrarse", doRegister),
+                      : longButtons("Registrarse", doRegister, icon: Icon(Icons.person_add)),
                 ],
               ),
             )

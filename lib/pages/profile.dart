@@ -236,7 +236,7 @@ class _ProfileState extends State<Profile> {
                       SizedBox(height: 10.0),
                       label("Sexo:"),
                       genderField,
-                      longButtons("Guardar cambios", modifyProfileData),
+                      longButtons("Guardar cambios", modifyProfileData, icon: Icon(Icons.save)),
                       // auth.loggedInStatus == Status.Authenticating
                       //   ? loading
                       // : longButtons("Guardar cambios", modifyProfileData),
