@@ -208,7 +208,7 @@ class _HealthDataState extends State<HealthData> {
     };
   }
 
-  static Future<FutureOr> onValue(Response response) async {
+   Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -219,12 +219,42 @@ class _HealthDataState extends State<HealthData> {
         'status': true,
         'message': 'Physiological data successfully sent'
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.file_upload,
+                  color: Colors.white),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Datos enviados correctamente')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       result = {
         'status': false,
         'message': 'Failed to send the physiological data',
         'data': responseData
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error,
+                  color: Colors.red),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Error, los datos no se han enviado')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     return result;
