@@ -93,6 +93,7 @@ class _LoginState extends State<Login> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(child: Image.asset('assets/images/colintmet_logo.png', height: 120,)),
                 SizedBox(height: 15.0),
                 label("Email"),
                 SizedBox(height: 5.0),
