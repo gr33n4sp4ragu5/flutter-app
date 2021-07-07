@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:collective_intelligence_metre/util/notifications.dart';
+import 'package:collective_intelligence_metre/util/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -284,14 +285,9 @@ class _HealthDataState extends State<HealthData> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text("Haz click en el icono para enviar los datos fisiológicos"),)),
-        Center(child: IconButton(
-          color: Colors.blue,
-          icon: Icon(Icons.file_upload),
-          onPressed: () {
-            fetchData();
-          },
-        ),)
+        Image.asset('assets/images/cloud_upload.gif'),
+        Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text("Al hacer click en el botón enviarás los datos fisiológicos recogidos desde la última vez que recibimos tus datos"),)),
+        longButtons("Enviar datos fisiológicos", () {fetchData();}, icon: Icon(Icons.file_upload)),
       ],
     );
   }

@@ -66,6 +66,7 @@ flutter:
     - assets/lang/en.json
     - assets/images/slider_example.png
     - assets/images/colintmet_logo.png
+    - assets/images/cloud_upload.gif
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
