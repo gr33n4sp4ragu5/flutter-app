@@ -75,8 +75,9 @@ class _SurveysState extends State<Surveys> {
   Widget surveyToWidget(BuildContext context, title, surveyPage, {bool enabled=true}) {
     return Card(
       child: ListTile(
-        title: Text(title),
+        title: Text(title, style: TextStyle(fontSize: 20),),
         tileColor: Color(0xFF36ABC4),
+        minVerticalPadding: 75,
         onTap: () async {
           await Navigator.push(
             context,
