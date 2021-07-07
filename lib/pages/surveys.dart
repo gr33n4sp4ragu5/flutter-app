@@ -1,5 +1,6 @@
 import 'package:collective_intelligence_metre/domain/CIMSurvey.dart';
 import 'package:collective_intelligence_metre/surveys/surveys_preloaded.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class Surveys extends StatefulWidget {
@@ -73,19 +74,21 @@ class _SurveysState extends State<Surveys> {
   }
 
   Widget surveyToWidget(BuildContext context, title, surveyPage, {bool enabled=true}) {
-    return Card(
-      child: ListTile(
-        title: Text(title, style: TextStyle(fontSize: 20),),
-        tileColor: Color(0xFF36ABC4),
-        minVerticalPadding: 75,
-        onTap: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => surveyPage),
-          );
-          updatePreloadedSurveysState();
-        },
-        enabled: enabled,
+    return BounceInLeft(
+      child: Card(
+        child: ListTile(
+          title: Text(title, style: TextStyle(fontSize: 20),),
+          tileColor: Color(0xFF36ABC4),
+          minVerticalPadding: 75,
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => surveyPage),
+            );
+            updatePreloadedSurveysState();
+          },
+          enabled: enabled,
+        ),
       ),
     );
   }
