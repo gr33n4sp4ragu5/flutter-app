@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:collective_intelligence_metre/util/notifications.dart';
+import 'package:collective_intelligence_metre/util/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -102,6 +103,21 @@ class _HealthDataState extends State<HealthData> {
 
       if(refined_data_list.isNotEmpty) {
         sendPhysiologicalData(refined_data_list);
+      } else {
+        final snackBar = SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.tag_faces,
+                    color: Colors.green),
+                SizedBox(width: 20),
+                Expanded(
+                    child: Text('Ya estás al día')
+                )
+              ],
+            )
+
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
 
 
@@ -208,7 +224,7 @@ class _HealthDataState extends State<HealthData> {
     };
   }
 
-  static Future<FutureOr> onValue(Response response) async {
+   Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -219,12 +235,42 @@ class _HealthDataState extends State<HealthData> {
         'status': true,
         'message': 'Physiological data successfully sent'
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.file_upload,
+                  color: Colors.white),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Datos enviados correctamente')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       result = {
         'status': false,
         'message': 'Failed to send the physiological data',
         'data': responseData
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error,
+                  color: Colors.red),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Error, los datos no se han enviado')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     return result;
@@ -237,22 +283,12 @@ class _HealthDataState extends State<HealthData> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-            crossAxisCount: 1,
-            children: [
-              IconButton(
-                icon: Icon(Icons.file_upload),
-                onPressed: () {
-                  fetchData();
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.notifications_active),
-                onPressed: () {
-                  scheduleRecurringNotification();
-                },
-              ),
-              _content(),]
-          );
+    return Column(
+      children: [
+        Image.asset('assets/images/cloud_upload.gif'),
+        Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text("Al hacer click en el botón enviarás los datos fisiológicos recogidos desde la última vez que recibimos tus datos"),)),
+        longButtons("Enviar datos fisiológicos", () {fetchData();}, icon: Icon(Icons.file_upload)),
+      ],
+    );
   }
 }

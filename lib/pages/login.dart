@@ -93,6 +93,7 @@ class _LoginState extends State<Login> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(child: Image.asset('assets/images/colintmet_logo.png', height: 120,)),
                 SizedBox(height: 15.0),
                 label("Email"),
                 SizedBox(height: 5.0),
@@ -104,7 +105,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 20.0),
                 auth.loggedInStatus == Status.Authenticating
                     ? loading
-                    : longButtons("Login", doLogin),
+                    : longButtons("Login", doLogin, icon: Icon(Icons.login)),
                 SizedBox(height: 5.0),
                 signUpLabel
               ],

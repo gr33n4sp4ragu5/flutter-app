@@ -30,6 +30,21 @@ Widget buildSurvey(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         },
         onCancel: ([RPTaskResult results]) {
           saveResultsAsync(results);
+          final snackBar = SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.save,
+                      color: Colors.white),
+                  SizedBox(width: 20),
+                  Expanded(
+                      child: Text('Progreso de la encuesta guardado')
+                  )
+                ],
+
+              )
+
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         },
       ),
     );

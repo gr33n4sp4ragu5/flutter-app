@@ -1,5 +1,6 @@
 import 'package:collective_intelligence_metre/domain/CIMSurvey.dart';
 import 'package:collective_intelligence_metre/surveys/surveys_preloaded.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class Surveys extends StatefulWidget {
@@ -34,12 +35,20 @@ class _SurveysState extends State<Surveys> {
     preloadedSurveys.preloadSurveys();
     List<CIMSurvey> surveys = preloadedSurveys.preloaded_surveys;
     List<CIMSurvey> available_surveys = surveys.where((survey) => SurveyState.NEW == survey.state).toList();
-    List<Widget> formattedSurveys = [
-      Text(
+    List<Widget> formattedSurveys = [];
+    available_surveys.forEach((element) {formattedSurveys.add(surveyToWidget(context, element.title, element.surveyPage));});
+    if(formattedSurveys.isNotEmpty) {
+      formattedSurveys.insert(0,Text(
         "Encuestas disponibles",
         style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
-      )];
-    available_surveys.forEach((element) {formattedSurveys.add(surveyToWidget(context, element.title, element.surveyPage));});
+      ));
+    } else {
+      formattedSurveys.insert(0,Text(
+        "No hay encuestas disponibles",
+        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+      ));
+    }
+    formattedSurveys.add(Padding(padding: const EdgeInsets.all(20.0),));
     return formattedSurveys;
   }
 
@@ -73,18 +82,21 @@ class _SurveysState extends State<Surveys> {
   }
 
   Widget surveyToWidget(BuildContext context, title, surveyPage, {bool enabled=true}) {
-    return Card(
-      child: ListTile(
-        title: Text(title),
-        tileColor: Color(0xFF36ABC4),
-        onTap: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => surveyPage),
-          );
-          updatePreloadedSurveysState();
-        },
-        enabled: enabled,
+    return BounceInLeft(
+      child: Card(
+        child: ListTile(
+          title: Text(title, style: TextStyle(fontSize: 20),),
+          tileColor: Color(0xFF36ABC4),
+          minVerticalPadding: 75,
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => surveyPage),
+            );
+            updatePreloadedSurveysState();
+          },
+          enabled: enabled,
+        ),
       ),
     );
   }

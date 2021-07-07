@@ -106,7 +106,7 @@ class _ProfileState extends State<Profile> {
         .catchError(onError);
   }
 
-  static Future<FutureOr> onValue(Response response) async {
+   Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(response.statusCode);
@@ -115,12 +115,42 @@ class _ProfileState extends State<Profile> {
         'status': true,
         'message': 'Profile successfully updated'
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.save,
+                  color: Colors.white),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Cambios guardados')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       result = {
         'status': false,
         'message': 'Failed to update profile',
         'data': responseData
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error,
+                  color: Colors.red),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Error, los cambios no se han guardado')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     return result;
   }
@@ -186,6 +216,7 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Center(child: Icon(Icons.person, size: 100,),),
                       SizedBox(height: 15.0),
                       label("Email"),
                       SizedBox(height: 5.0),
@@ -205,7 +236,7 @@ class _ProfileState extends State<Profile> {
                       SizedBox(height: 10.0),
                       label("Sexo:"),
                       genderField,
-                      longButtons("Guardar cambios", modifyProfileData),
+                      longButtons("Guardar cambios", modifyProfileData, icon: Icon(Icons.save)),
                       // auth.loggedInStatus == Status.Authenticating
                       //   ? loading
                       // : longButtons("Guardar cambios", modifyProfileData),

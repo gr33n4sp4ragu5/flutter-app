@@ -10,14 +10,19 @@ import 'package:research_package/model.dart';
 import 'app_url.dart';
 
 void saveResultsAsync([RPTaskResult results]) async {
-  print("Saving survey");
-  String lastStepAnsweredId = getLastStepAnsweredId(results);
-  String surveyId = results.identifier;
-  String userEmail = await getCurrentUserEmail();
+  if(results.results.isNotEmpty) {
 
-  SavedSurvey savedSurvey = SavedSurvey(results, lastStepAnsweredId, userEmail, surveyId);
-  await SurveyPreferences().saveSurvey(savedSurvey);
-  //markSurveyAsStarted();
+    print("Saving survey");
+    String lastStepAnsweredId = getLastStepAnsweredId(results);
+    String surveyId = results.identifier;
+    String userEmail = await getCurrentUserEmail();
+
+    SavedSurvey savedSurvey = SavedSurvey(results, lastStepAnsweredId, userEmail, surveyId);
+    await SurveyPreferences().saveSurvey(savedSurvey);
+    //markSurveyAsStarted();
+  } else {
+    print("Results esta vacio");
+  }
 
 }
 
