@@ -216,6 +216,7 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Center(child: Icon(Icons.person, size: 100,),),
                       SizedBox(height: 15.0),
                       label("Email"),
                       SizedBox(height: 5.0),
