@@ -102,6 +102,21 @@ class _HealthDataState extends State<HealthData> {
 
       if(refined_data_list.isNotEmpty) {
         sendPhysiologicalData(refined_data_list);
+      } else {
+        final snackBar = SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.tag_faces,
+                    color: Colors.green),
+                SizedBox(width: 20),
+                Expanded(
+                    child: Text('Ya estás al día')
+                )
+              ],
+            )
+
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
 
 
@@ -267,22 +282,17 @@ class _HealthDataState extends State<HealthData> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-            crossAxisCount: 1,
-            children: [
-              IconButton(
-                icon: Icon(Icons.file_upload),
-                onPressed: () {
-                  fetchData();
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.notifications_active),
-                onPressed: () {
-                  scheduleRecurringNotification();
-                },
-              ),
-              _content(),]
-          );
+    return Column(
+      children: [
+        Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text("Haz click en el icono para enviar los datos fisiológicos"),)),
+        Center(child: IconButton(
+          color: Colors.blue,
+          icon: Icon(Icons.file_upload),
+          onPressed: () {
+            fetchData();
+          },
+        ),)
+      ],
+    );
   }
 }
