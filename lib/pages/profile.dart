@@ -136,6 +136,21 @@ class _ProfileState extends State<Profile> {
         'message': 'Failed to update profile',
         'data': responseData
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error,
+                  color: Colors.red),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Error, los cambios no se han guardado')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     return result;
   }
