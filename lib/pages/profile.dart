@@ -106,7 +106,7 @@ class _ProfileState extends State<Profile> {
         .catchError(onError);
   }
 
-  static Future<FutureOr> onValue(Response response) async {
+   Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(response.statusCode);
@@ -115,6 +115,21 @@ class _ProfileState extends State<Profile> {
         'status': true,
         'message': 'Profile successfully updated'
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.save,
+                  color: Colors.white),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Cambios guardados')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       result = {
         'status': false,
