@@ -31,10 +31,16 @@ class PreloadedSurveys {
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
         .then(deserializeFInishedSurveysResponse)
         .catchError(onError);
+    final activated_surveys = await get(AppUrl.getActivatedSurveys,
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
+        .then(deserializeFInishedSurveysResponse)
+        .catchError(onError);
     if (finished_surveys.contains(surveyId)) {
       return SurveyState.FINISHED;
-    } else{
-      return SurveyState.NEW;
+    } else if (activated_surveys.contains(surveyId)){
+      return SurveyState.AVAILABLE;
+    } else {
+      return SurveyState.NOT_ACTIVATED;
     }
   }
 
@@ -43,5 +49,12 @@ class PreloadedSurveys {
     print("finished_surveys");
     print(finished_surveys);
     return finished_surveys;
+  }
+
+  List deserializeActivatedSurveysResponse(Response response) {
+    final List activated_surveys = json.decode(response.body)["activated_surveys"];
+    print("activated_surveys");
+    print(activated_surveys);
+    return activated_surveys;
   }
 }

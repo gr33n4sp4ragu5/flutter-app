@@ -12,4 +12,5 @@ class AppUrl {
   static const String modifyProfileData = baseURL + "/profile/edit";
   static const String getFinishedSurveys = baseURL + "/surveys/finished";
   static const String testendpoint = baseURL + "/test/whatever";
+  static const String getActivatedSurveys = baseURL + "/surveys/activated";
 }
