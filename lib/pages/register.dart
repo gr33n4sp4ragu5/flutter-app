@@ -179,7 +179,7 @@ class _RegisterState extends State<Register> {
             final snackBar = SnackBar(
                 content: Row(
                   children: [
-                    Icon(Icons.account_circle_rounded,
+                    Icon(Icons.person_add,
                     color: Colors.green),
                     SizedBox(width: 20),
                     Expanded(
@@ -212,6 +212,9 @@ class _RegisterState extends State<Register> {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(backgroundColor: Colors.blue,
+          title: Text("Registro"),
+          centerTitle: true,),
         body: Container(
           padding: EdgeInsets.all(40.0),
           child: Form(
