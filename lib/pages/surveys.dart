@@ -35,12 +35,20 @@ class _SurveysState extends State<Surveys> {
     preloadedSurveys.preloadSurveys();
     List<CIMSurvey> surveys = preloadedSurveys.preloaded_surveys;
     List<CIMSurvey> available_surveys = surveys.where((survey) => SurveyState.NEW == survey.state).toList();
-    List<Widget> formattedSurveys = [
-      Text(
+    List<Widget> formattedSurveys = [];
+    available_surveys.forEach((element) {formattedSurveys.add(surveyToWidget(context, element.title, element.surveyPage));});
+    if(formattedSurveys.isNotEmpty) {
+      formattedSurveys.insert(0,Text(
         "Encuestas disponibles",
         style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
-      )];
-    available_surveys.forEach((element) {formattedSurveys.add(surveyToWidget(context, element.title, element.surveyPage));});
+      ));
+    } else {
+      formattedSurveys.insert(0,Text(
+        "No hay encuestas disponibles",
+        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+      ));
+    }
+    formattedSurveys.add(Padding(padding: const EdgeInsets.all(20.0),));
     return formattedSurveys;
   }
 
