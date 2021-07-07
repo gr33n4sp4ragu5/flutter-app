@@ -176,7 +176,20 @@ class _RegisterState extends State<Register> {
         form.save();
         auth.register(_email, _password, _name, _surnames, _birthdate, _gender).then((response) {
           if (response['status']) {
-            final snackBar = SnackBar(content: Text('Registrado con éxito'));
+            final snackBar = SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.account_circle_rounded,
+                    color: Colors.green),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Text('Registrado con éxito')
+                    )
+                  ],
+
+                )
+
+            );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             Navigator.pushReplacementNamed(context, '/login');
           } else {
