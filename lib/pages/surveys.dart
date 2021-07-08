@@ -34,7 +34,7 @@ class _SurveysState extends State<Surveys> {
     PreloadedSurveys preloadedSurveys = this.preloadedSurveys;
     preloadedSurveys.preloadSurveys();
     List<CIMSurvey> surveys = preloadedSurveys.preloaded_surveys;
-    List<CIMSurvey> available_surveys = surveys.where((survey) => SurveyState.NEW == survey.state).toList();
+    List<CIMSurvey> available_surveys = surveys.where((survey) => SurveyState.AVAILABLE == survey.state).toList();
     List<Widget> formattedSurveys = [];
     available_surveys.forEach((element) {formattedSurveys.add(surveyToWidget(context, element.title, element.surveyPage));});
     if(formattedSurveys.isNotEmpty) {

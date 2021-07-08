@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 enum SurveyState {
-  FINISHED, STARTED, NEW
+  FINISHED, AVAILABLE, NOT_ACTIVATED
 }
 
 class CIMSurvey {
