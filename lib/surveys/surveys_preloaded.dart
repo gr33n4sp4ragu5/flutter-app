@@ -33,7 +33,7 @@ class PreloadedSurveys {
         .catchError(onError);
     final activated_surveys = await get(AppUrl.getActivatedSurveys,
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
-        .then(deserializeFInishedSurveysResponse)
+        .then(deserializeActivatedSurveysResponse)
         .catchError(onError);
     if (finished_surveys.contains(surveyId)) {
       return SurveyState.FINISHED;
