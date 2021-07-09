@@ -39,8 +39,16 @@ class _MyAppState extends State<MyApp> {
     User user = await UserPreferences().getUser();
     if (user.token == null) {
       navigatorKey.currentState.pushReplacementNamed("/login");
-    } else {
+    } else if(user.tokenExpiration.isAfter(DateTime.now())) {
       navigatorKey.currentState.pushReplacementNamed("/health");
+    } else if(user.refreshTokenExpiration.isAfter(DateTime.now())) {
+      AuthProvider auth = Provider.of<AuthProvider>(context);
+      Map<String, dynamic> result = await auth.refreshToken(user.refreshToken);
+      if(result['status']){
+        navigatorKey.currentState.pushReplacementNamed("/health");
+      } else {
+        navigatorKey.currentState.pushReplacementNamed("/login");
+      }
     }
   }
 
@@ -99,7 +107,7 @@ class _MyAppState extends State<MyApp> {
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token == null) {
+                    else if (snapshot.data.token == null || snapshot.data.tokenExpiration.isBefore(DateTime.now())) {
                       scheduleRecurringNotification();
                       return Login();
                     }

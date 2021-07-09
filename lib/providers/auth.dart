@@ -43,26 +43,7 @@ class AuthProvider with ChangeNotifier {
     _loggedInStatus = Status.Authenticating;
     notifyListeners();
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
-
-      User authUser = User.fromJson(responseData);
-
-      UserPreferences().saveUser(authUser);
-
-      _loggedInStatus = Status.LoggedIn;
-      notifyListeners();
-
-      result = {'status': true, 'message': 'Successful', 'user': authUser};
-    } else {
-      _loggedInStatus = Status.NotLoggedIn;
-      notifyListeners();
-      result = {
-        'status': false,
-        'message': json.decode(response.body)['error']
-      };
-    }
-    return result;
+    return onUserAuthentication(response, result);
   }
 
   Future<Map<String, dynamic>> register(String email, String password, String name, String surnames,
@@ -82,6 +63,47 @@ class AuthProvider with ChangeNotifier {
         headers: {'Content-Type': 'application/json'})
         .then(onValue)
         .catchError(onError);
+  }
+
+  Future<Map<String, dynamic>> refreshToken(String refreshToken) async {
+
+    final Map<String, dynamic> registrationData = {
+      'refresh_token': refreshToken
+    };
+
+    Response response = await post(AppUrl.refreshToken,
+        body: json.encode(registrationData),
+        headers: {'Content-Type': 'application/json'});
+
+    _loggedInStatus = Status.Authenticating;
+    notifyListeners();
+    var result;
+    return onUserAuthentication(response, result);
+    
+  }
+
+  onUserAuthentication(Response response, result) {
+    print(response.body);
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+    
+      User authUser = User.fromJson(responseData);
+    
+      UserPreferences().saveUser(authUser);
+    
+      _loggedInStatus = Status.LoggedIn;
+      notifyListeners();
+    
+      result = {'status': true, 'message': 'Successful', 'user': authUser};
+    } else {
+      _loggedInStatus = Status.NotLoggedIn;
+      notifyListeners();
+      result = {
+        'status': false,
+        'message': json.decode(response.body)['error']
+      };
+    }
+    return result;
   }
 
   static Future<FutureOr> onValue(Response response) async {
