@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
 MaterialButton longButtons(String title, Function fun,
-    {Color color: const Color(0xfff063057), Color textColor: Colors.white}) {
+    {Color color: const Color(0xfff063057), Color textColor: Colors.white, Icon icon}) {
   return MaterialButton(
     onPressed: fun,
     textColor: textColor,
     color: color,
     child: SizedBox(
       width: double.infinity,
-      child: Text(
-        title,
-        textAlign: TextAlign.center,
-      ),
+      child: Row(
+        children: [
+          icon,
+          SizedBox(width: 20),
+          Expanded(
+              child: Text(title)
+          )
+        ],
+
+      )
     ),
     height: 45,
     minWidth: 600,

@@ -176,6 +176,21 @@ class _RegisterState extends State<Register> {
         form.save();
         auth.register(_email, _password, _name, _surnames, _birthdate, _gender).then((response) {
           if (response['status']) {
+            final snackBar = SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.person_add,
+                    color: Colors.green),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Text('Registrado con éxito')
+                    )
+                  ],
+
+                )
+
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             Navigator.pushReplacementNamed(context, '/login');
           } else {
             Flushbar(
@@ -197,6 +212,9 @@ class _RegisterState extends State<Register> {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(backgroundColor: Colors.blue,
+          title: Text("Registro"),
+          centerTitle: true,),
         body: Container(
           padding: EdgeInsets.all(40.0),
           child: Form(
@@ -239,7 +257,7 @@ class _RegisterState extends State<Register> {
                   otherRadioButton,
                   auth.loggedInStatus == Status.Authenticating
                       ? loading
-                      : longButtons("Registrarse", doRegister),
+                      : longButtons("Registrarse", doRegister, icon: Icon(Icons.person_add)),
                 ],
               ),
             )

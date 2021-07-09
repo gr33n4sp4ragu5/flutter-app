@@ -40,6 +40,7 @@ dependencies:
   health: 3.0.4
   permission_handler: ^5.1.0+2
   flutter_local_notifications: ^4.0.1+2
+  animate_do: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,8 @@ flutter:
     - assets/lang/es.json
     - assets/lang/en.json
     - assets/images/slider_example.png
+    - assets/images/colintmet_logo.png
+    - assets/images/cloud_upload.gif
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

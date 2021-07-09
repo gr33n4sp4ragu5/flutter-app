@@ -11,4 +11,7 @@ class AppUrl {
   static const String sendPhysiologicalData = baseURL + "/physiological/data";
   static const String getProfileData = baseURL + "/profile/data";
   static const String modifyProfileData = baseURL + "/profile/edit";
+  static const String getFinishedSurveys = baseURL + "/surveys/finished";
+  static const String testendpoint = baseURL + "/test/whatever";
+  static const String getActivatedSurveys = baseURL + "/surveys/activated";
 }

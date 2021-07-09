@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:collective_intelligence_metre/util/notifications.dart';
+import 'package:collective_intelligence_metre/util/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -44,18 +45,48 @@ class _HealthDataState extends State<HealthData> {
       print(statuses[Permission.sensors]);
 
     }
+
+    String token = await UserPreferences.getToken();
+    await get(AppUrl.getProfileData,
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
+        .then(getLastUploadedDate)
+        .catchError(onError);
     
-    DateTime startDate = DateTime(2021, 06, 24, 0, 0, 0);
-    DateTime endDate = DateTime(2021, 06, 25, 23, 59, 59);
+    DateTime startDate = _lastUploaded;
+    DateTime endDate = DateTime.now();
 
 
     HealthFactory health = HealthFactory();
-
-    /// Define the types to get.
     List<HealthDataType> types = [
+      HealthDataType.BLOOD_GLUCOSE,
+      HealthDataType.BLOOD_OXYGEN,
+      HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+      HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+
       HealthDataType.STEPS,
-      HealthDataType.HEART_RATE
+
+      HealthDataType.HEART_RATE,
+      HealthDataType.BODY_TEMPERATURE
     ];
+
+   if(Platform.isIOS) {
+      List<HealthDataType> iosTypes = [
+
+        HealthDataType.HIGH_HEART_RATE_EVENT,
+        HealthDataType.LOW_HEART_RATE_EVENT,
+        HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+        HealthDataType.RESTING_HEART_RATE,
+        HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+        HealthDataType.WALKING_HEART_RATE,
+
+        HealthDataType.ELECTRODERMAL_ACTIVITY,
+
+        HealthDataType.SLEEP_ASLEEP,
+        HealthDataType.SLEEP_AWAKE,
+        HealthDataType.SLEEP_IN_BED
+      ];
+      types.addAll(iosTypes);
+    }
 
     setState(() => _state = AppState.FETCHING_DATA);
 
@@ -80,12 +111,6 @@ class _HealthDataState extends State<HealthData> {
       _healthDataList = HealthFactory.removeDuplicates(_healthDataList);
 
       // Filter data previous to what is already in the database
-      String token = await UserPreferences.getToken();
-      final profile_data = await get(AppUrl.getProfileData,
-          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token })
-          .then(getLastUploadedDate)
-          .catchError(onError);
-
       List<HealthDataPoint> refined_data_list = _healthDataList.where((data) => data.dateTo.isAfter(_lastUploaded)).toList();
 
 
@@ -102,6 +127,21 @@ class _HealthDataState extends State<HealthData> {
 
       if(refined_data_list.isNotEmpty) {
         sendPhysiologicalData(refined_data_list);
+      } else {
+        final snackBar = SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.tag_faces,
+                    color: Colors.green),
+                SizedBox(width: 20),
+                Expanded(
+                    child: Text('Ya estás al día')
+                )
+              ],
+            )
+
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
 
 
@@ -208,7 +248,7 @@ class _HealthDataState extends State<HealthData> {
     };
   }
 
-  static Future<FutureOr> onValue(Response response) async {
+   Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -219,12 +259,42 @@ class _HealthDataState extends State<HealthData> {
         'status': true,
         'message': 'Physiological data successfully sent'
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.file_upload,
+                  color: Colors.white),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Datos enviados correctamente')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       result = {
         'status': false,
         'message': 'Failed to send the physiological data',
         'data': responseData
       };
+      final snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error,
+                  color: Colors.red),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Error, los datos no se han enviado')
+              )
+            ],
+
+          )
+
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     return result;
@@ -237,22 +307,12 @@ class _HealthDataState extends State<HealthData> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-            crossAxisCount: 1,
-            children: [
-              IconButton(
-                icon: Icon(Icons.file_upload),
-                onPressed: () {
-                  fetchData();
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.notifications_active),
-                onPressed: () {
-                  scheduleRecurringNotification();
-                },
-              ),
-              _content(),]
-          );
+    return Column(
+      children: [
+        Image.asset('assets/images/cloud_upload.gif'),
+        Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text("Al hacer click en el botón enviarás los datos fisiológicos recogidos desde la última vez que recibimos tus datos"),)),
+        longButtons("Enviar datos fisiológicos", () {fetchData();}, icon: Icon(Icons.file_upload)),
+      ],
+    );
   }
 }
