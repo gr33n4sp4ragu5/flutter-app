@@ -57,12 +57,36 @@ class _HealthDataState extends State<HealthData> {
 
 
     HealthFactory health = HealthFactory();
-
-    /// Define the types to get.
     List<HealthDataType> types = [
+      HealthDataType.BLOOD_GLUCOSE,
+      HealthDataType.BLOOD_OXYGEN,
+      HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+      HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+
       HealthDataType.STEPS,
-      HealthDataType.HEART_RATE
+
+      HealthDataType.HEART_RATE,
+      HealthDataType.BODY_TEMPERATURE
     ];
+
+   if(Platform.isIOS) {
+      List<HealthDataType> iosTypes = [
+
+        HealthDataType.HIGH_HEART_RATE_EVENT,
+        HealthDataType.LOW_HEART_RATE_EVENT,
+        HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+        HealthDataType.RESTING_HEART_RATE,
+        HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+        HealthDataType.WALKING_HEART_RATE,
+
+        HealthDataType.ELECTRODERMAL_ACTIVITY,
+
+        HealthDataType.SLEEP_ASLEEP,
+        HealthDataType.SLEEP_AWAKE,
+        HealthDataType.SLEEP_IN_BED
+      ];
+      types.addAll(iosTypes);
+    }
 
     setState(() => _state = AppState.FETCHING_DATA);
 
