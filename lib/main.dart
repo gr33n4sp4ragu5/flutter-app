@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:collective_intelligence_metre/util/notifications.dart';
+import 'package:collective_intelligence_metre/util/resolving_ssl.dart';
 import 'package:flutter/material.dart';
 import 'package:collective_intelligence_metre/pages/home.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
@@ -17,6 +20,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
 void main() {
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
