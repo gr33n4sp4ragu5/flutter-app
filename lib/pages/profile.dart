@@ -10,6 +10,7 @@ import 'package:http/http.dart';
 import 'package:collective_intelligence_metre/util/constants.dart';
 import 'package:collective_intelligence_metre/pages/register.dart';
 import 'package:async/async.dart';
+import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -50,7 +51,9 @@ class _ProfileState extends State<Profile> {
       emailController.text = profile_data["email"];
       nameController.text = profile_data["name"];
       surnamesController.text = profile_data["surnames"];
-      birthdateController.text = profile_data["birthdate"];
+      DateTime birthdayDate = DateTime.parse(profile_data["birthdate"]);
+      String formattedDate = DateFormat('dd/MM/yyyy').format(birthdayDate);
+      birthdateController.text = formattedDate;
       genderController.text = translateGender(profile_data["gender"]);
 
       return profile_data;

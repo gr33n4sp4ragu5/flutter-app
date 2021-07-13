@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:collective_intelligence_metre/util/notifications.dart';
+import 'package:collective_intelligence_metre/util/resolving_ssl.dart';
 import 'package:flutter/material.dart';
 import 'package:collective_intelligence_metre/pages/home.dart';
 import 'package:collective_intelligence_metre/pages/login.dart';
@@ -17,6 +20,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
 void main() {
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -107,7 +111,7 @@ class _MyAppState extends State<MyApp> {
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token == null || snapshot.data.tokenExpiration.isBefore(DateTime.now())) {
+                    else if (snapshot.data.token == null || snapshot.data.tokenExpiration == null || snapshot.data.tokenExpiration.isBefore(DateTime.now())) {
                       scheduleRecurringNotification();
                       return Login();
                     }
