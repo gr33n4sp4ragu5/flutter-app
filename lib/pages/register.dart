@@ -5,6 +5,7 @@ import 'package:collective_intelligence_metre/util/validators.dart';
 import 'package:collective_intelligence_metre/util/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:collective_intelligence_metre/util/constants.dart';
+import 'package:intl/intl.dart';
 
 class Gender {
   static final Set<String> allowedGenders = Set.unmodifiable({"male", "female", "other"});
@@ -37,6 +38,7 @@ class _RegisterState extends State<Register> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: _birthdate,
+        locale: Locale('es'),
         firstDate: DateTime(1920),
         lastDate: DateTime(2101));
     if (picked != null && picked != _birthdate)
@@ -101,7 +103,7 @@ class _RegisterState extends State<Register> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("${_birthdate.toLocal()}".split(' ')[0]),
+          Text("${DateFormat('dd-MM-yyyy').format(_birthdate)}"),
           SizedBox(height: 20.0,),
           ElevatedButton(
             onPressed: () => _selectDate(context),
